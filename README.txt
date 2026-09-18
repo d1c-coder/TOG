@@ -1,15 +1,13 @@
-TOG multipage static website
+TOG MULTIPAGE SITE
 
-Open index.html to start.
+Open index.html in a browser to run the static site.
 
-Pages
-Home
-The TOG System
-The Rights Object
-Verification
-Portability
-Developers
-Vision
-Documentation
+The homepage includes:
+• Full hero video background
+• Animated colorful 3D rights object
+• Interactive 3D how it works demo
+• Rights signal grid
+• Community links in the navigation and footer
+• Responsive mobile layout
 
-The site is static and can run without a build step. The 3D visuals use canvas and the shared motion layer. Google Fonts are loaded when internet access is available, with system fallbacks for offline use.
+Community links currently use # placeholders. Replace those href values with the final X, Telegram and Discord URLs before launch.
