@@ -11,28 +11,31 @@
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-<div class="stars"></div>
-<header class="nav">
+<header class="nav donut-nav reference-header">
   <a class="brand" href="index.html"><img src="assets/tog-logo.png" alt="TOG"><span>TOG</span></a>
-  <nav class="desktop-nav">
-    <a href="system.html">System</a><a href="rights.html">Rights</a><a href="verify.html">Verify</a><a href="developers.html">Developers</a><a href="docs.html">Docs</a>
-  </nav>
+  <div class="nav-spacer"></div>
   <div class="nav-socials" aria-label="Community links">
-    <a href="#" aria-label="X">X</a><a href="#" aria-label="Telegram">TG</a><a href="#" aria-label="Discord">DISCORD</a>
+    <a href="#" aria-label="X"><img src="assets/x.svg" alt=""></a>
   </div>
-  <a class="nav-cta" href="verify.html">Verify asset <span>↗</span></a>
+  <a class="nav-cta" href="verify.html">Explore TOG <span>↗</span></a>
   <button class="menu" aria-label="Open menu"><i></i><i></i><i></i></button>
 </header>
 <div class="mobile-menu">
   <a href="system.html">System</a><a href="rights.html">Rights</a><a href="verify.html">Verify</a><a href="portability.html">Portability</a><a href="developers.html">Developers</a><a href="vision.html">Vision</a><a href="docs.html">Docs</a>
-  <div class="mobile-socials"><a href="#">X</a><a href="#">TG</a><a href="#">DISCORD</a></div>
+  <div class="mobile-socials"><a href="#">X</a></div>
+</div>
+
+<div class="scroll-follow" aria-hidden="true">
+  <span class="scroll-follow-line"></span>
+  <div class="scroll-follow-copy"><small>NEXT</small><strong>HOW IT WORKS</strong></div>
+  <span class="scroll-follow-arrow">↓</span>
 </div>
 
 <main class="page">
 <section class="hero donut-hero">
-  <video class="hero-video" autoplay muted loop playsinline preload="auto" aria-hidden="true"><source src="assets/hero-wallpaper.mp4" type="video/mp4"></video>
+  <video class="hero-video" autoplay muted loop playsinline preload="auto" poster="assets/hero-poster.jpg" aria-hidden="true"><source src="assets/aurora.mp4" type="video/mp4"></video>
+  
   <div class="hero-video-shade"></div><div class="hero-video-grain"></div>
-  <div class="hero-color-wash"></div>
   <div class="hero-copy-column">
     <div class="eyebrow">PORTABLE DIGITAL RIGHTS LAYER <span>01</span></div>
     <h1>Rights that travel<br>with <em>every asset.</em></h1>
@@ -43,19 +46,21 @@
       <div><strong>01</strong><span>PORTABLE PROFILE</span></div>
       <div><strong>∞</strong><span>SUPPORTED SURFACES</span></div>
     </div>
-    <div class="hero-actions"><a class="button primary" href="verify.html">Explore TOG <span>↗</span></a><a class="button" href="#how-it-works">How it works <span>↘</span></a></div>
+    <div class="hero-actions"><a class="button primary" href="verify.html">Explore TOG <span>↗</span></a><a class="button" href="#how-it-works">Why TOG ? <span>↘</span></a></div>
   </div>
   <div class="scroll-hint">SCROLL TO EXPLORE <b>⌄</b></div>
 </section>
 
 <section class="ticker"><div>LICENSE</div><div>ROYALTIES</div><div>ATTRIBUTION</div><div>TRANSFER</div><div>USAGE</div><div>STATUS</div><div>LICENSE</div><div>ROYALTIES</div><div>ATTRIBUTION</div></section>
 
-<section class="section statement reveal">
+<section class="section statement reveal scroll-section" data-next="How It Works" id="the-problem">
   <div class="section-label">01 / THE PROBLEM</div>
   <div><h2>Ownership can move.<br><em>Rights often do not.</em></h2><p>When a digital asset is sold, bridged or moved to another platform, the rights attached to it can lose their context. TOG is designed to make that rights context portable and readable.</p></div>
 </section>
 
-<section class="section how" id="how-it-works">
+<section class="section how scroll-section" id="how-it-works" data-next="The Signals">
+  <img class="how-bg-image" src="assets/agentic-loop-bg.png" alt="" aria-hidden="true">
+  <div class="how-bg-overlay"></div>
   <div class="section-label">02 / HOW IT WORKS</div>
   <div class="how-head"><h2>One profile.<br><em>Everywhere.</em></h2><p>The asset moves. The rights context stays legible. TOG gives applications one shared object to read instead of a different interpretation on every platform.</p></div>
   <div class="rights-demo reveal">
@@ -83,7 +88,7 @@
   <div class="how-steps reveal"><div><span>01</span><b>IDENTIFY</b><p>The asset gets a precise identity that the profile can describe.</p></div><div><span>02</span><b>DESCRIBE</b><p>Rights are expressed across the six core dimensions.</p></div><div><span>03</span><b>VERIFY</b><p>Each claim can carry its source and verification state.</p></div><div><span>04</span><b>TRAVEL</b><p>The profile remains readable across supported wallets, markets and apps.</p></div></div>
 </section>
 
-<section class="section signal-section">
+<section class="section signal-section scroll-section" id="the-signals" data-next="The Layer">
   <div class="section-label">03 / THE SIGNALS</div>
   <div class="signal-grid">
     <article><span>01</span><h3>LICENSE</h3><p>What the asset is licensed to allow.</p></article>
@@ -95,21 +100,21 @@
   </div>
 </section>
 
-<section class="section culture reveal">
+<section class="section culture reveal scroll-section" id="the-layer" data-next="Built for the Surfaces">
   <div class="culture-card"><div class="culture-orb"></div><div class="section-label">TOG / THE LAYER</div><h2>Make the<br><em>rights visible.</em></h2><p>Built for a world where digital assets move fast and the context around them should not disappear.</p><div class="culture-stats"><span><b>ANY</b><small>SUPPORTED ASSET</small></span><span><b>ANYWHERE</b><small>READABLE CONTEXT</small></span><span><b>ONE</b><small>COMMON PROFILE</small></span></div></div>
 </section>
 
-<section class="section ecosystem reveal">
+<section class="section ecosystem reveal scroll-section" id="surfaces" data-next="The Rights Object">
   <div class="section-label">04 / BUILT FOR THE SURFACES</div>
   <div class="surface-row"><div><b>WALLETS</b><span>READ</span></div><div><b>MARKETS</b><span>SURFACE</span></div><div><b>APPS</b><span>QUERY</span></div><div><b>CREATORS</b><span>PROVIDE</span></div></div>
 </section>
 
-<section class="final"><div class="final-orb"></div><div class="section-label">TOG</div><h2>Put the rights<br><em>beside the asset.</em></h2><p>One profile that wallets, markets and applications can read without rebuilding the rights context from scratch.</p><div class="hero-actions"><a class="button primary large" href="rights.html">Explore the Rights Object <span>↗</span></a><a class="button large" href="docs.html">Read the specification <span>↗</span></a></div></section>
+<section class="final scroll-section" data-next="End"><div class="final-orb"></div><div class="section-label">TOG</div><h2>Put the rights<br><em>beside the asset.</em></h2><p>One profile that wallets, markets and applications can read without rebuilding the rights context from scratch.</p><div class="hero-actions"><a class="button primary large" href="rights.html">Explore the Rights Object <span>↗</span></a><a class="button large" href="docs.html">Read the specification <span>↗</span></a></div></section>
 </main>
 
 <footer>
   <div class="footer-brand"><img src="assets/tog-logo.png" alt="TOG"><span>TOG</span><p>Portable Digital Rights Layer</p></div>
-  <div class="footer-community"><span>COMMUNITY</span><a href="#">X</a><a href="#">TG</a><a href="#">DISCORD</a></div>
+  <div class="footer-community"><span>COMMUNITY</span><a href="#" aria-label="X"><img src="assets/x.svg" alt=""></a></div>
   <div class="footer-cols"><div><b>PRODUCT</b><a href="system.html">System</a><a href="rights.html">Rights Object</a><a href="verify.html">Verification</a><a href="portability.html">Portability</a></div><div><b>BUILD</b><a href="developers.html">Developers</a><a href="docs.html">Documentation</a><a href="vision.html">Vision</a></div><div><b>TOG</b><a href="index.html">Home</a><a href="vision.html">About</a><a href="docs.html">Specification</a></div></div>
   <div class="footer-bottom"><span>TOG</span><span>Portable rights infrastructure</span><span>06 RIGHTS / 03 SOURCES / 01 OBJECT</span></div>
 </footer>
