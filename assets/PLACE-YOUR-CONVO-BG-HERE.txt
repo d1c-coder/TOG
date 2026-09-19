@@ -1,0 +1,2 @@
+Place the real convo-bg.png file in this folder with this exact filename.
+It is used as the subtle background artwork for THE PROBLEM section on the home page.

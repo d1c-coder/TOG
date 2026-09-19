@@ -83,40 +83,6 @@ if(demo){
   }),{threshold:.18,rootMargin:'0px 0px -8% 0px'});
   page.querySelectorAll('.scroll-copy').forEach(el=>copyObserver.observe(el));
 
-  // Keep the next-section cue alive in the viewport and change its destination as the reader moves.
-  const follow=document.querySelector('.scroll-follow');
-  const sections=[...page.querySelectorAll('.scroll-section')];
-  if(follow && sections.length){
-    const nextLabel=follow.querySelector('strong');
-    let active=0;
-    const updateFollow=()=>{
-      const center=innerHeight*.48;
-      let nearest=0,dist=Infinity;
-      sections.forEach((s,i)=>{
-        const r=s.getBoundingClientRect();
-        const d=Math.abs((r.top+r.height*.28)-center);
-        if(d<dist){dist=d;nearest=i;}
-      });
-      active=nearest;
-      const next=sections[Math.min(active+1,sections.length-1)];
-      const label=next?.dataset.next || next?.querySelector('.section-label')?.textContent?.replace(/^\d+\s*\/\s*/,'') || 'Next';
-      if(nextLabel && nextLabel.textContent!==label){
-        nextLabel.animate([{opacity:1,transform:'translateY(0)'},{opacity:0,transform:'translateY(5px)'},{opacity:1,transform:'translateY(0)'}],{duration:360,easing:'cubic-bezier(.16,1,.3,1)'});
-        nextLabel.textContent=label;
-      }
-      follow.classList.toggle('visible',scrollY>innerHeight*.35 && active<sections.length-1);
-      const progress=Math.min(1,Math.max(0,scrollY/(document.documentElement.scrollHeight-innerHeight)));
-      follow.style.setProperty('--follow-shift',`${Math.sin(progress*Math.PI*4)*5}px`);
-    };
-    let ticking=false;
-    addEventListener('scroll',()=>{
-      if(ticking)return;
-      ticking=true;requestAnimationFrame(()=>{updateFollow();ticking=false;});
-    },{passive:true});
-    addEventListener('resize',updateFollow);
-    updateFollow();
-  }
-
   // Small parallax on the How It Works image; motion is tied to scroll position, not a timer.
   const bg=document.querySelector('.how-bg-image');
   if(bg){

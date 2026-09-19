@@ -12,24 +12,20 @@
 </head>
 <body>
 <header class="nav donut-nav reference-header">
-  <a class="brand" href="index.html"><img src="assets/tog-logo.png" alt="TOG"><span>TOG</span></a>
+  <a class="brand" href="index.html"><img src="assets/tog-nav-visible.png" alt="TOG"><span>TOG</span></a>
   <div class="nav-spacer"></div>
   <div class="nav-socials" aria-label="Community links">
     <a href="#" aria-label="X"><img src="assets/x.svg" alt=""></a>
   </div>
+  <span class="nav-ca" aria-label="Contract address coming soon">CA <b>COMING SOON</b></span>
   <a class="nav-cta" href="verify.html">Explore TOG <span>↗</span></a>
   <button class="menu" aria-label="Open menu"><i></i><i></i><i></i></button>
 </header>
 <div class="mobile-menu">
   <a href="system.html">System</a><a href="rights.html">Rights</a><a href="verify.html">Verify</a><a href="portability.html">Portability</a><a href="developers.html">Developers</a><a href="vision.html">Vision</a><a href="docs.html">Docs</a>
-  <div class="mobile-socials"><a href="#">X</a></div>
+  <div class="mobile-socials"><a href="#" aria-label="X"><img src="assets/x.svg" alt=""></a></div>
 </div>
 
-<div class="scroll-follow" aria-hidden="true">
-  <span class="scroll-follow-line"></span>
-  <div class="scroll-follow-copy"><small>NEXT</small><strong>HOW IT WORKS</strong></div>
-  <span class="scroll-follow-arrow">↓</span>
-</div>
 
 <main class="page">
 <section class="hero donut-hero">
@@ -51,9 +47,10 @@
   <div class="scroll-hint">SCROLL TO EXPLORE <b>⌄</b></div>
 </section>
 
-<section class="ticker"><div>LICENSE</div><div>ROYALTIES</div><div>ATTRIBUTION</div><div>TRANSFER</div><div>USAGE</div><div>STATUS</div><div>LICENSE</div><div>ROYALTIES</div><div>ATTRIBUTION</div></section>
 
-<section class="section statement reveal scroll-section" data-next="How It Works" id="the-problem">
+<section class="section statement reveal scroll-section section-with-bg" data-next="How It Works" id="the-problem">
+  <img class="section-bg-image convo-bg" src="assets/convo-bg.png" alt="" aria-hidden="true">
+  <div class="section-bg-overlay"></div>
   <div class="section-label">01 / THE PROBLEM</div>
   <div><h2>Ownership can move.<br><em>Rights often do not.</em></h2><p>When a digital asset is sold, bridged or moved to another platform, the rights attached to it can lose their context. TOG is designed to make that rights context portable and readable.</p></div>
 </section>
@@ -88,15 +85,17 @@
   <div class="how-steps reveal"><div><span>01</span><b>IDENTIFY</b><p>The asset gets a precise identity that the profile can describe.</p></div><div><span>02</span><b>DESCRIBE</b><p>Rights are expressed across the six core dimensions.</p></div><div><span>03</span><b>VERIFY</b><p>Each claim can carry its source and verification state.</p></div><div><span>04</span><b>TRAVEL</b><p>The profile remains readable across supported wallets, markets and apps.</p></div></div>
 </section>
 
-<section class="section signal-section scroll-section" id="the-signals" data-next="The Layer">
+<section class="section signal-section scroll-section section-with-bg" id="the-signals" data-next="The Layer">
+  <img class="section-bg-image beyond-chat-bg" src="assets/beyond-chat-bg.png" alt="" aria-hidden="true">
+  <div class="section-bg-overlay"></div>
   <div class="section-label">03 / THE SIGNALS</div>
   <div class="signal-grid">
-    <article><span>01</span><h3>LICENSE</h3><p>What the asset is licensed to allow.</p></article>
-    <article><span>02</span><h3>ROYALTIES</h3><p>Royalty information associated with the asset.</p></article>
-    <article><span>03</span><h3>ATTRIBUTION</h3><p>How attribution should appear when the asset is used.</p></article>
-    <article><span>04</span><h3>TRANSFER</h3><p>Transfer conditions represented in the profile.</p></article>
-    <article><span>05</span><h3>USAGE</h3><p>Usage context and restrictions that can be surfaced.</p></article>
-    <article><span>06</span><h3>STATUS</h3><p>Current state and source status for the profile.</p></article>
+    <article class="signal-card signal-license"><div class="signal-visual" aria-hidden="true"><div class="signal-visual-core"></div><div class="signal-visual-ring"></div><div class="signal-visual-line"></div><span></span></div><div class="signal-card-copy"><span class="signal-index">01</span><h3>LICENSE</h3><p>What the asset is licensed to allow.</p></div></article>
+    <article class="signal-card signal-royalties"><div class="signal-visual" aria-hidden="true"><div class="signal-visual-core"></div><div class="signal-visual-ring"></div><div class="signal-visual-line"></div><span></span></div><div class="signal-card-copy"><span class="signal-index">02</span><h3>ROYALTIES</h3><p>Royalty information associated with the asset.</p></div></article>
+    <article class="signal-card signal-attribution"><div class="signal-visual" aria-hidden="true"><div class="signal-visual-core"></div><div class="signal-visual-ring"></div><div class="signal-visual-line"></div><span></span></div><div class="signal-card-copy"><span class="signal-index">03</span><h3>ATTRIBUTION</h3><p>How attribution should appear when the asset is used.</p></div></article>
+    <article class="signal-card signal-transfer"><div class="signal-visual" aria-hidden="true"><div class="signal-visual-core"></div><div class="signal-visual-ring"></div><div class="signal-visual-line"></div><span></span></div><div class="signal-card-copy"><span class="signal-index">04</span><h3>TRANSFER</h3><p>Transfer conditions represented in the profile.</p></div></article>
+    <article class="signal-card signal-usage"><div class="signal-visual" aria-hidden="true"><div class="signal-visual-core"></div><div class="signal-visual-ring"></div><div class="signal-visual-line"></div><span></span></div><div class="signal-card-copy"><span class="signal-index">05</span><h3>USAGE</h3><p>Usage context and restrictions that can be surfaced.</p></div></article>
+    <article class="signal-card signal-status"><div class="signal-visual" aria-hidden="true"><div class="signal-visual-core"></div><div class="signal-visual-ring"></div><div class="signal-visual-line"></div><span></span></div><div class="signal-card-copy"><span class="signal-index">06</span><h3>STATUS</h3><p>Current state and source status for the profile.</p></div></article>
   </div>
 </section>
 
