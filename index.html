@@ -29,23 +29,23 @@
 </div>
 
 <main class="page">
-<section class="hero">
-  <video class="hero-video" autoplay muted loop playsinline preload="auto" aria-hidden="true"><source src="assets/hero-ambient.mp4" type="video/mp4"></video>
+<section class="hero donut-hero">
+  <video class="hero-video" autoplay muted loop playsinline preload="auto" aria-hidden="true"><source src="assets/hero-wallpaper.mp4" type="video/mp4"></video>
   <div class="hero-video-shade"></div><div class="hero-video-grain"></div>
-  <div class="hero-bg-grid"></div>
+  <div class="hero-color-wash"></div>
   <div class="hero-copy-column">
-    <div class="eyebrow">PORTABLE DIGITAL RIGHTS LAYER <span>●</span> 01</div>
-    <h1>Rights that<br><em>travel</em> with the asset.</h1>
-    <p class="hero-copy">A standardized rights profile for digital assets, making licenses, royalties, attribution, transfer and usage readable wherever an asset moves.</p>
-    <div class="hero-actions"><a class="button primary" href="verify.html">Verify an asset <span>↗</span></a><a class="button" href="#how-it-works">See how it works <span>↓</span></a></div>
-    <div class="hero-meta"><span><b>06</b>RIGHTS DIMENSIONS</span><span><b>03</b>VERIFICATION STATES</span><span><b>01</b>PORTABLE PROFILE</span></div>
+    <div class="eyebrow">PORTABLE DIGITAL RIGHTS LAYER <span>01</span></div>
+    <h1>Rights that travel<br>with <em>every asset.</em></h1>
+    <p class="hero-copy">A portable rights profile that keeps license, royalties, attribution, transfer, usage and status readable wherever a digital asset moves.</p>
+    <div class="hero-stats-card">
+      <div><strong>06</strong><span>RIGHTS DIMENSIONS</span></div>
+      <div><strong>03</strong><span>VERIFICATION STATES</span></div>
+      <div><strong>01</strong><span>PORTABLE PROFILE</span></div>
+      <div><strong>∞</strong><span>SUPPORTED SURFACES</span></div>
+    </div>
+    <div class="hero-actions"><a class="button primary" href="verify.html">Explore TOG <span>↗</span></a><a class="button" href="#how-it-works">How it works <span>↘</span></a></div>
   </div>
-  <div class="hero-object-wrap" aria-hidden="true">
-    <canvas id="hero3d"></canvas>
-    <div class="hero-object-label label-a"><i></i> RIGHTS PAYLOAD</div><div class="hero-object-label label-b"><i></i> TOKEN IDENTITY</div><div class="hero-object-label label-c"><i></i> VERIFICATION</div>
-    <div class="hero-object-caption"><span>TOG / 0004219</span><span>PORTABLE RIGHTS OBJECT</span></div>
-  </div>
-  <div class="scroll-hint">SCROLL TO EXPLORE<b>⌄</b></div>
+  <div class="scroll-hint">SCROLL TO EXPLORE <b>⌄</b></div>
 </section>
 
 <section class="ticker"><div>LICENSE</div><div>ROYALTIES</div><div>ATTRIBUTION</div><div>TRANSFER</div><div>USAGE</div><div>STATUS</div><div>LICENSE</div><div>ROYALTIES</div><div>ATTRIBUTION</div></section>
@@ -57,15 +57,30 @@
 
 <section class="section how" id="how-it-works">
   <div class="section-label">02 / HOW IT WORKS</div>
-  <div class="how-head"><h2>One object.<br><em>Six signals.</em></h2><p>The profile travels with the asset. Applications read the same rights language instead of rebuilding the context from scratch.</p></div>
-  <div class="demo-stage reveal">
-    <div class="demo-top"><span>TOG / LIVE OBJECT DEMO</span><span>INTERACTIVE MODEL</span></div>
-    <canvas id="demo3d"></canvas>
-    <div class="demo-core"><strong>TOG</strong><span>RIGHTS OBJECT</span><i></i></div>
-    <div class="demo-chip d1">LICENSE</div><div class="demo-chip d2">ROYALTIES</div><div class="demo-chip d3">ATTRIBUTION</div><div class="demo-chip d4">TRANSFER</div><div class="demo-chip d5">USAGE</div><div class="demo-chip d6">STATUS</div>
-    <div class="demo-readout"><span>ASSET</span><b>0x7F...A92C</b><span>STATE</span><b class="live">VERIFIED</b></div>
+  <div class="how-head"><h2>One profile.<br><em>Everywhere.</em></h2><p>The asset moves. The rights context stays legible. TOG gives applications one shared object to read instead of a different interpretation on every platform.</p></div>
+  <div class="rights-demo reveal">
+    <div class="rights-demo-top"><span>TOG / PDRL OBJECT</span><span>LIVE DEMO</span></div>
+    <div class="rights-scene" aria-hidden="true">
+      <div class="rights-shadow"></div>
+      <div class="rights-stack">
+        <div class="rights-layer layer-back"></div>
+        <div class="rights-layer layer-mid"></div>
+        <div class="rights-card">
+          <div class="card-top"><span>PORTABLE RIGHTS OBJECT</span><b>TOG</b></div>
+          <div class="card-id">ASSET <strong>0x7F...A92C</strong></div>
+          <div class="card-title">Rights Profile</div>
+          <div class="card-lines"><span></span><span></span><span></span></div>
+          <div class="card-bottom"><i></i><span>VERIFIED ONCHAIN</span><b>01</b></div>
+        </div>
+      </div>
+      <div class="demo-float f1">LICENSE <i>01</i></div>
+      <div class="demo-float f2">ROYALTIES <i>02</i></div>
+      <div class="demo-float f3">ATTRIBUTION <i>03</i></div>
+      <div class="demo-float f4">STATUS <i>06</i></div>
+    </div>
+    <div class="rights-demo-footer"><span>IDENTITY</span><span>RIGHTS</span><span>SOURCE</span><span>STATUS</span></div>
   </div>
-  <div class="how-steps reveal"><div><span>01</span><b>ASSET ENTERS</b><p>Identity gives the profile something precise to describe.</p></div><div><span>02</span><b>RIGHTS RESOLVE</b><p>License, royalties, attribution, transfer, usage and status become readable.</p></div><div><span>03</span><b>SOURCES SHOW</b><p>Claims carry a verification state and the source behind the information.</p></div><div><span>04</span><b>PROFILE TRAVELS</b><p>The rights context stays readable across supported surfaces.</p></div></div>
+  <div class="how-steps reveal"><div><span>01</span><b>IDENTIFY</b><p>The asset gets a precise identity that the profile can describe.</p></div><div><span>02</span><b>DESCRIBE</b><p>Rights are expressed across the six core dimensions.</p></div><div><span>03</span><b>VERIFY</b><p>Each claim can carry its source and verification state.</p></div><div><span>04</span><b>TRAVEL</b><p>The profile remains readable across supported wallets, markets and apps.</p></div></div>
 </section>
 
 <section class="section signal-section">
