@@ -448,30 +448,50 @@ body{background:#030304}
  .reference-header .brand img{width:78px!important;height:32px!important}
 }
 
-/* Final mobile containment + CA header badge */
-.nav-ca{display:inline-flex;align-items:center;gap:7px;margin-left:auto;margin-right:14px;padding:7px 11px;border:1px solid rgba(255,255,255,.11);border-radius:999px;background:rgba(255,255,255,.035);backdrop-filter:blur(14px) saturate(120%);-webkit-backdrop-filter:blur(14px) saturate(120%);font:8px/1 Inter,Arial,sans-serif;letter-spacing:.08em;color:rgba(255,255,255,.56);white-space:nowrap}
-.nav-ca b{font-weight:600;color:rgba(255,255,255,.84);letter-spacing:.06em}
-.reference-header .brand img{content:url('assets/tog-nav-visible.png')!important;background:transparent!important;mix-blend-mode:normal!important}
-.reference-header .brand{background:transparent!important}
-
-@media(max-width:900px){
-  .donut-hero{height:auto!important;min-height:calc(100svh - 74px)!important;padding:0 30px 86px!important;align-items:flex-start!important;overflow:clip!important}
-  .donut-hero .hero-copy-column{margin-top:31vh!important;padding-bottom:0!important}
-  .donut-hero .hero-stats-card,.donut-hero .hero-actions{z-index:60!important}
-  .statement{margin-top:0!important;clear:both!important;position:relative!important;z-index:1!important}
-  .statement *{pointer-events:auto}
-  .donut-hero .hero-video,.donut-hero .hero-video-shade,.donut-hero .hero-video-grain{height:100%!important}
-  .nav-ca{margin-left:auto;margin-right:8px;padding:6px 8px;font-size:7px;gap:5px}
-  .nav-ca b{font-size:7px}
+/* Final TOG brand pass */
+.reference-header .brand img{
+  width:96px!important;height:34px!important;object-fit:contain!important;object-position:left center!important;
+  background:transparent!important;border:0!important;
+}
+.reference-header .brand{gap:0!important}
+.ca-coming-soon{
+  display:inline-flex;align-items:center;justify-content:center;
+  height:34px;padding:0 12px;border-radius:999px;
+  border:1px solid rgba(255,255,255,.11);
+  background:rgba(255,255,255,.035);
+  color:rgba(255,255,255,.58);
+  font:600 8px/1 'Space Mono',monospace;letter-spacing:.13em;white-space:nowrap;
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+}
+.x-brand-banner{position:relative;width:100%;padding:0 5vw 7vw;background:#07050d;overflow:hidden}
+.x-brand-banner-link{display:block;position:relative;border:1px solid rgba(255,255,255,.08);border-radius:28px;overflow:hidden;background:rgba(255,255,255,.025);box-shadow:0 30px 90px rgba(0,0,0,.2)}
+.x-brand-banner img{display:block;width:100%;height:auto;aspect-ratio:3/1;object-fit:cover;opacity:.96;transition:transform .8s cubic-bezier(.22,1,.36,1),opacity .3s ease}
+.x-brand-banner-link:hover img{transform:scale(1.025);opacity:1}
+/* Hero must contain its own mobile content; following sections never overlap controls. */
+@media(max-width:850px){
+  .reference-header .brand img{width:92px!important;height:33px!important}
+  .ca-coming-soon{height:31px;padding:0 9px;font-size:7px;letter-spacing:.1em}
+  .donut-hero{height:auto!important;min-height:100svh!important;padding-top:108px!important;padding-bottom:82px!important;align-items:flex-start!important}
+  .donut-hero .hero-copy-column{margin-top:7vh!important;width:100%!important}
+  .donut-hero .hero-actions{padding-bottom:4px!important}
+  .statement{margin-top:0!important}
 }
 @media(max-width:560px){
-  .donut-hero{height:auto!important;min-height:calc(100svh - 72px)!important;padding:0 22px 72px!important}
-  .donut-hero .hero-copy-column{margin-top:29vh!important}
-  .donut-hero .hero-actions{position:relative!important;z-index:80!important}
-  .nav-ca{padding:6px 7px;margin-right:5px;letter-spacing:.045em}
-  .nav-ca b{display:inline!important}
-  .reference-header .brand{min-width:78px!important}
-  .reference-header .brand img{width:74px!important;height:31px!important}
+  .reference-header .brand img{width:84px!important;height:31px!important}
+  .reference-header .nav-socials{margin-right:5px!important}
+  .reference-header .nav-socials a,.reference-header .nav-socials a img{width:16px!important;height:16px!important}
   .reference-header .nav-cta{display:none!important}
-  .reference-header .menu{display:block!important;flex:0 0 42px!important}
+  .ca-coming-soon{font-size:6.5px;height:29px;padding:0 8px;letter-spacing:.08em}
+  .donut-hero{padding:96px 5vw 76px!important;min-height:calc(100svh - 70px)!important}
+  .donut-hero .hero-copy-column{margin-top:4vh!important}
+  .donut-hero h1{font-size:clamp(3.5rem,16vw,5rem)!important;line-height:.92!important}
+  .donut-hero .hero-copy{font-size:14px!important;line-height:1.55!important;margin:22px 0 20px!important}
+  .donut-hero .hero-stats-card{grid-template-columns:repeat(2,1fr)!important;gap:16px 0!important;padding:16px 12px!important}
+  .donut-hero .hero-stats-card>div{padding:0 11px!important}
+  .donut-hero .hero-stats-card strong{font-size:26px!important}
+  .donut-hero .hero-actions{flex-direction:column!important;gap:10px!important;margin-top:20px!important}
+  .donut-hero .button{width:100%!important;min-width:0!important;height:52px!important}
+  .x-brand-banner{padding:0 4vw 12vw}
+  .x-brand-banner-link{border-radius:18px}
+  .x-brand-banner img{aspect-ratio:2.35/1;object-fit:cover}
 }
