@@ -495,3 +495,7 @@ body{background:#030304}
   .x-brand-banner-link{border-radius:18px}
   .x-brand-banner img{aspect-ratio:2.35/1;object-fit:cover}
 }
+
+/* Product specification download */
+.docs-download{display:inline-flex;margin:0 0 34px;position:relative;z-index:2}
+@media (max-width:700px){.docs-download{margin-bottom:24px;width:100%;justify-content:center}}
