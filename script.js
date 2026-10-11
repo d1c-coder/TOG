@@ -96,3 +96,43 @@ if(demo){
     addEventListener('resize',updateBg); updateBg();
   }
 })();
+
+
+// EVM wallet connection: uses the wallet extension's standard provider API.
+(()=>{
+  const buttons=[...document.querySelectorAll('[data-connect-wallet]')];
+  if(!buttons.length) return;
+  let connectedAddress='';
+  const shortAddress=a=>a?`${a.slice(0,6)}…${a.slice(-4)}`:'Connect wallet';
+  let toastTimer;
+  function toast(message){
+    let el=document.querySelector('.wallet-toast');
+    if(!el){el=document.createElement('div');el.className='wallet-toast';el.setAttribute('role','status');el.setAttribute('aria-live','polite');document.body.appendChild(el);}
+    el.textContent=message;el.hidden=false;clearTimeout(toastTimer);toastTimer=setTimeout(()=>{el.hidden=true;},5200);
+  }
+  function paint(address){connectedAddress=address||'';buttons.forEach(b=>{b.textContent=connectedAddress?shortAddress(connectedAddress):'Connect wallet';b.classList.toggle('is-connected',!!connectedAddress);b.setAttribute('aria-label',connectedAddress?`Wallet connected: ${connectedAddress}`:'Connect wallet');});}
+  async function connect(){
+    const provider=window.ethereum;
+    if(!provider){toast('No compatible wallet was detected. Install or enable MetaMask or another EVM wallet, then try again.');return;}
+    buttons.forEach(b=>{b.disabled=true;});
+    try{
+      const accounts=await provider.request({method:'eth_requestAccounts'});
+      if(!accounts||!accounts.length){toast('Wallet connection was cancelled.');return;}
+      paint(accounts[0]);
+      let chainName='EVM network';
+      try{const chainId=await provider.request({method:'eth_chainId'});const names={'0x1':'Ethereum Mainnet','0x89':'Polygon','0xa86a':'Avalanche','0xa4b1':'Arbitrum One','0xa':'Optimism','0x2105':'Base','0x38':'BNB Smart Chain','0xaa36a7':'Sepolia'};chainName=names[String(chainId).toLowerCase()]||`Chain ${chainId}`;}catch(_){}
+      toast(`Wallet connected on ${chainName}.`);
+    }catch(err){
+      if(err&&err.code===4001) toast('Connection request rejected in your wallet.');
+      else toast((err&&err.message)?`Could not connect wallet: ${err.message}`:'Could not connect wallet. Please try again.');
+    }finally{buttons.forEach(b=>{b.disabled=false;});}
+  }
+  buttons.forEach(b=>b.addEventListener('click',connect));
+  if(window.ethereum){
+    window.ethereum.request({method:'eth_accounts'}).then(accounts=>{if(accounts&&accounts[0])paint(accounts[0]);}).catch(()=>{});
+    if(typeof window.ethereum.on==='function'){
+      window.ethereum.on('accountsChanged',accounts=>paint(accounts&&accounts[0]||''));
+      window.ethereum.on('chainChanged',()=>{if(connectedAddress)toast('Wallet network changed.');});
+    }
+  }
+})();
