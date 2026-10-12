@@ -85,7 +85,7 @@
       <div class="hero-right">
         <p>A portable rights profile that keeps license, royalties, attribution, transfer, usage and status readable wherever a digital asset moves.</p>
         <small>06 rights dimensions / 03 verification states / 01 portable profile</small>
-        <div class="hero-actions"><a class="button primary" href="#">Explore TOG</a><a class="button" href="#the-problem">Why TOG?</a></div>
+        <div class="hero-actions"><a class="button primary" href="#demo">Try the live demo</a><a class="button" href="#the-problem">Why TOG?</a></div>
       </div>
     </div>
   </section>
@@ -164,12 +164,134 @@
     </div>
   </section>
 
+  <!-- 6b / LIVE DEMO -->
+  <section class="demo" id="demo" data-pose="demo">
+    <div class="demo-head">
+      <h2>Try it live.</h2>
+      <p>Create a rights profile for an asset, sign it with your wallet, then read and verify it the way any app would. It all runs in your browser.</p>
+    </div>
+
+    <div class="demo-shell">
+      <div class="demo-tabs" role="tablist">
+        <button type="button" class="on" data-tab="create" role="tab" aria-selected="true">Create a profile</button>
+        <button type="button" data-tab="verify" role="tab" aria-selected="false">Read &amp; verify</button>
+      </div>
+
+      <!-- CREATE -->
+      <div class="demo-pane" data-pane="create">
+        <div class="demo-form">
+          <div class="d-step">
+            <div class="d-n">1</div>
+            <div class="d-c">
+              <h4>Connect your wallet</h4>
+              <div class="d-row"><button class="d-btn primary" id="dConnect" type="button">Connect wallet</button><span class="d-note" id="dWalletNote">Not connected</span></div>
+            </div>
+          </div>
+
+          <div class="d-step">
+            <div class="d-n">2</div>
+            <div class="d-c">
+              <h4>Pick an asset</h4>
+              <div class="seg" id="dMode"><button type="button" class="on" data-mode="sample">Sample asset</button><button type="button" data-mode="real">Real NFT (ERC-721)</button></div>
+              <div class="d-real" id="dReal" hidden>
+                <div class="d-grid2">
+                  <label>Contract address<input id="aContract" type="text" placeholder="0x…" spellcheck="false" autocomplete="off"></label>
+                  <label>Token ID<input id="aToken" type="text" inputmode="numeric" placeholder="1" autocomplete="off"></label>
+                </div>
+                <div class="d-row"><button class="d-btn" id="aLoad" type="button">Read from chain</button><button class="d-btn ghost" id="aExample" type="button">Use an example</button></div>
+                <div class="d-asset" id="dAsset" hidden></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="d-step">
+            <div class="d-n">3</div>
+            <div class="d-c">
+              <h4>Describe the six rights</h4>
+              <div class="d-grid2">
+                <label>License
+                  <select id="fLicense"><option>Personal use only</option><option selected>Commercial use</option><option>Exclusive commercial license</option><option>CC BY 4.0</option><option>All rights reserved</option></select>
+                </label>
+                <label>Transfer
+                  <select id="fTransfer"><option selected>Freely transferable</option><option>Creator approval required</option><option>Non-transferable</option></select>
+                </label>
+                <label>Royalty (%)
+                  <input id="fRoy" type="number" min="0" max="15" step="0.5" value="5">
+                </label>
+                <label>Royalty recipient
+                  <input id="fRoyTo" type="text" placeholder="Defaults to your wallet" spellcheck="false" autocomplete="off">
+                </label>
+                <label>Attribution text
+                  <input id="fAttr" type="text" value="Credit the creator" autocomplete="off">
+                </label>
+                <label>Status
+                  <select id="fStatus"><option selected>Active</option><option>Disputed</option><option>Revoked</option></select>
+                </label>
+              </div>
+              <div class="d-checks">
+                <label class="chk"><input id="fAttrReq" type="checkbox" checked>Attribution required</label>
+                <span class="d-sep">Usage allowed:</span>
+                <label class="chk"><input type="checkbox" name="usage" value="remix" checked>Remix</label>
+                <label class="chk"><input type="checkbox" name="usage" value="commercial" checked>Commercial</label>
+                <label class="chk"><input type="checkbox" name="usage" value="ai-training">AI training</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="d-step">
+            <div class="d-n">4</div>
+            <div class="d-c">
+              <h4>Verify and sign</h4>
+              <div class="d-row">
+                <button class="d-btn" id="dCheck" type="button">Check on-chain</button>
+                <button class="d-btn primary" id="dSign" type="button">Sign with wallet</button>
+              </div>
+              <p class="d-msg" id="dMsg" role="status"></p>
+            </div>
+          </div>
+        </div>
+
+        <aside class="passport" aria-label="Rights passport preview">
+          <div class="pp-top"><span>Portable rights object</span><b>TOG</b></div>
+          <div class="pp-asset"><small>Asset</small><strong id="ppAsset">TOG Demo Asset #001</strong><code id="ppAssetId">sample:TOG-DEMO-001</code></div>
+          <div class="pp-rows" id="ppRows"></div>
+          <div class="pp-foot">
+            <div><small>Authority</small><span id="ppAuth">—</span></div>
+            <div><small>Profile hash</small><code id="ppHash">not signed yet</code></div>
+            <div><small>Signed by</small><code id="ppSigner">—</code></div>
+          </div>
+          <div class="pp-actions"><button class="d-btn ghost" id="ppCopy" type="button">Copy JSON</button><button class="d-btn ghost" id="ppDl" type="button">Download .json</button></div>
+          <details class="pp-json"><summary>View the object</summary><pre id="ppJson"></pre></details>
+          <div class="pp-legend"><span><i class="b-declared"></i>Declared: stated by the creator</span><span><i class="b-signed"></i>Signed: covered by a wallet signature</span><span><i class="b-onchain"></i>On-chain: matches contract data</span></div>
+        </aside>
+      </div>
+
+      <!-- VERIFY -->
+      <div class="demo-pane" data-pane="verify" hidden>
+        <div class="demo-form">
+          <p class="d-lead">Paste any TOG profile. The reader recomputes its hash, recovers the signer from the signature and checks it against the creator, with no server involved. Try editing a value and see it fail.</p>
+          <textarea id="vIn" spellcheck="false" placeholder="Paste a TOG/PDRL profile (JSON) here, or load the one you just signed."></textarea>
+          <div class="d-row">
+            <button class="d-btn" id="vLoad" type="button">Load my signed profile</button>
+            <button class="d-btn primary" id="vRun" type="button">Verify</button>
+            <button class="d-btn ghost" id="vTamper" type="button">Tamper with it</button>
+            <button class="d-btn ghost" id="vLive" type="button">Re-check on-chain</button>
+          </div>
+        </div>
+        <div class="verify-out" id="vOut"><p class="d-note">Results appear here.</p></div>
+      </div>
+    </div>
+
+    <details class="demo-log"><summary>Activity log (real wallet calls)</summary><pre id="dLog"></pre></details>
+    <p class="demo-foot">Demo scope: royalty and ownership claims can be checked against ERC-2981 / ERC-721 contract data. The other dimensions are signed claims. Nothing is stored on a server and nothing is sent on-chain.</p>
+  </section>
+
   <!-- 7 / FINAL -->
   <section class="final" id="start" data-pose="final">
     <div class="final-copy">
       <h2>Put the rights<br>beside the asset.</h2>
       <p>One profile that wallets, markets and applications can read without rebuilding the rights context from scratch.</p>
-      <div class="hero-actions"><a class="button primary large" href="#">Explore the Rights Object</a><a class="button large" href="#">Download the specification</a></div>
+      <div class="hero-actions"><a class="button primary large" href="#demo">Launch the live demo</a><a class="button large" href="#">Download the specification</a></div>
     </div>
   </section>
 </main>
