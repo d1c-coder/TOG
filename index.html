@@ -8,7 +8,7 @@
 <title>TOG | Portable Digital Rights Layer</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="home.css">
 </head>
 <body class="home">
@@ -43,7 +43,7 @@
 </svg>
 
 <header class="nav" id="nav">
-  <a class="brand" href="index.html" aria-label="TOG home"><img src="assets/tog-logo-nav.png" alt=""><span>TOG</span></a>
+  <a class="brand" href="#" aria-label="TOG home"><img src="assets/tog-logo-nav.png" alt="TOG"></a>
   <div class="nav-right">
     <button class="connect-wallet" type="button" data-connect-wallet>Connect wallet</button>
     <button class="menu" id="menuBtn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenu"><i></i><i></i></button>
@@ -51,13 +51,13 @@
 </header>
 
 <nav class="mobile-menu" id="mobileMenu" aria-label="Site">
-  <a href="system.html" style="--n:0">System</a>
-  <a href="rights.html" style="--n:1">Rights</a>
-  <a href="verify.html" style="--n:2">Verify</a>
-  <a href="portability.html" style="--n:3">Portability</a>
-  <a href="developers.html" style="--n:4">Developers</a>
-  <a href="vision.html" style="--n:5">Vision</a>
-  <a href="docs.html" style="--n:6">Docs</a>
+  <a href="#" style="--n:0">System</a>
+  <a href="#" style="--n:1">Rights</a>
+  <a href="#" style="--n:2">Verify</a>
+  <a href="#" style="--n:3">Portability</a>
+  <a href="#" style="--n:4">Developers</a>
+  <a href="#" style="--n:5">Vision</a>
+  <a href="#" style="--n:6">Docs</a>
   <div class="mobile-socials"><a href="https://x.com/tog_protocol" target="_blank" rel="noopener noreferrer" aria-label="TOG on X"><img src="assets/x.svg" alt=""></a></div>
 </nav>
 
@@ -73,20 +73,25 @@
 <main>
   <!-- 1 / HERO -->
   <section class="hero" id="top" data-pose="hero">
-    <video class="hero-video" autoplay muted loop playsinline preload="auto" poster="assets/hero-poster.jpg" aria-hidden="true"><source src="assets/aurora.mp4" type="video/mp4"><source src="assets/hero-wallpaper.mp4" type="video/mp4"></video>
-    <div class="hero-shade"></div>
-    <div class="hero-copy" id="heroCopy">
-      <div class="ca-badge"><i></i>CA coming soon</div>
-      <h1>Rights that travel<br><span class="grad">with every asset.</span></h1>
-      <p>A portable rights profile that keeps license, royalties, attribution, transfer, usage and status readable wherever a digital asset moves.</p>
-      <div class="hero-actions"><a class="button primary" href="verify.html">Explore TOG</a><a class="button" href="#the-problem">Why TOG?</a></div>
+    <div class="hero-bg" aria-hidden="true">
+      <div class="hb-glow"></div><div class="hb-edge"></div>
+      <div class="hb-bokeh" id="bokeh"></div>
+      <div class="hb-grain"></div>
     </div>
-    <div class="hero-facts" id="heroFacts">
-      <div><b>6</b><span>rights dimensions</span></div>
-      <div><b>3</b><span>verification states</span></div>
-      <div><b>1</b><span>portable profile</span></div>
+    <div class="hf hf1" aria-hidden="true">01101010</div>
+    <div class="hf hf2" aria-hidden="true">0X7F…A92C</div>
+    <div class="hf hf3" aria-hidden="true">RIGHTS / 06</div>
+    <div class="hero-bottom" id="heroCopy">
+      <div class="hero-left">
+        <div class="tag"><span>CA coming soon</span><i></i><i></i></div>
+        <h1><span>Rights that travel</span><span class="l2">with every asset.</span></h1>
+      </div>
+      <div class="hero-right">
+        <p>A portable rights profile that keeps license, royalties, attribution, transfer, usage and status readable wherever a digital asset moves.</p>
+        <small>06 rights dimensions / 03 verification states / 01 portable profile</small>
+        <div class="hero-actions"><a class="button primary" href="#">Explore TOG</a><a class="button" href="#the-problem">Why TOG?</a></div>
+      </div>
     </div>
-    <div class="scroll-cue" id="scrollCue"><span>Scroll</span><i></i></div>
   </section>
 
   <!-- 2 / THE PROBLEM -->
@@ -168,7 +173,7 @@
     <div class="final-copy">
       <h2>Put the rights<br>beside the asset.</h2>
       <p>One profile that wallets, markets and applications can read without rebuilding the rights context from scratch.</p>
-      <div class="hero-actions"><a class="button primary large" href="rights.html">Explore the Rights Object</a><a class="button large" href="assets/TOG_Product_Spec.pdf" download="TOG_Product_Spec.pdf">Download the specification</a></div>
+      <div class="hero-actions"><a class="button primary large" href="#">Explore the Rights Object</a><a class="button large" href="#">Download the specification</a></div>
     </div>
   </section>
 </main>
@@ -180,12 +185,12 @@
 </section>
 
 <footer>
-  <div class="footer-brand"><img src="assets/tog-logo-nav.png" alt="TOG"><span>TOG</span><p>Portable Digital Rights Layer</p></div>
+  <div class="footer-brand"><img src="assets/tog-logo-nav.png" alt="TOG"><p>Portable Digital Rights Layer</p></div>
   <div class="footer-community"><span>Community</span><a href="https://x.com/tog_protocol" target="_blank" rel="noopener noreferrer" aria-label="TOG on X"><img src="assets/x.svg" alt=""></a></div>
   <div class="footer-cols">
-    <div><b>Product</b><a href="system.html">System</a><a href="rights.html">Rights Object</a><a href="verify.html">Verification</a><a href="portability.html">Portability</a></div>
-    <div><b>Build</b><a href="developers.html">Developers</a><a href="docs.html">Documentation</a><a href="vision.html">Vision</a></div>
-    <div><b>TOG</b><a href="index.html">Home</a><a href="vision.html">About</a><a href="assets/TOG_Product_Spec.pdf" download="TOG_Product_Spec.pdf">Specification PDF</a></div>
+    <div><b>Product</b><a href="#">System</a><a href="#">Rights Object</a><a href="#">Verification</a><a href="#">Portability</a></div>
+    <div><b>Build</b><a href="#">Developers</a><a href="#">Documentation</a><a href="#">Vision</a></div>
+    <div><b>TOG</b><a href="#">Home</a><a href="#">About</a><a href="#">Specification PDF</a></div>
   </div>
   <div class="footer-bottom"><span>TOG</span><span>Portable rights infrastructure</span><span>6 rights, 3 sources, 1 object</span></div>
 </footer>
