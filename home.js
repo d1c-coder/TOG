@@ -28,6 +28,7 @@ addEventListener('keydown', e => { if (e.key === 'Escape') setMenu(false); });
   if (!buttons.length) return;
   const found = new Map();                 // EIP-6963 wallets (MetaMask, Rabby, Coinbase, Phantom EVM...)
   let connectedAddress = '', active = null, toastTimer;
+  const subs = [];
   const short = a => `${a.slice(0, 6)}…${a.slice(-4)}`;
 
   addEventListener('eip6963:announceProvider', e => {
@@ -60,6 +61,7 @@ addEventListener('keydown', e => { if (e.key === 'Escape') setMenu(false); });
 
   function paint(address) {
     connectedAddress = address || '';
+    subs.forEach(f => { try { f(connectedAddress); } catch (_) {} });
     buttons.forEach(b => {
       b.textContent = connectedAddress ? short(connectedAddress) : 'Connect wallet';
       b.classList.toggle('is-connected', !!connectedAddress);
@@ -146,6 +148,8 @@ addEventListener('keydown', e => { if (e.key === 'Escape') setMenu(false); });
   }
   buttons.forEach(b => b.addEventListener('click', onClick));
 
+  window.TOGWallet = { address: () => connectedAddress, provider: () => active, connect: () => { if (!connectedAddress) onClick(); }, subscribe: f => subs.push(f) };
+
   // restore an already-approved connection silently
   setTimeout(() => {
     const list = wallets();
@@ -189,6 +193,361 @@ for (let k = 0; k < N; k++) {
   }
 })();
 
+/* ================= LIVE DEMO ================= */
+(() => {
+  const root = $('#demo');
+  if (!root) return;
+  const $id = id => document.getElementById(id);
+  /* ---- crypto: keccak256 + secp256k1 recovery (BigInt, no dependencies) ---- */
+const toHex = b => '0x' + Array.from(b, x => x.toString(16).padStart(2, '0')).join('');
+const fromHex = h => { h = h.replace(/^0x/, ''); const o = new Uint8Array(h.length / 2); for (let i = 0; i < o.length; i++) o[i] = parseInt(h.substr(i * 2, 2), 16); return o; };
+const utf8 = s => new TextEncoder().encode(s);
+const keccak = (() => {
+  const M = (1n << 64n) - 1n;
+  const RC = [0x0000000000000001n,0x0000000000008082n,0x800000000000808an,0x8000000080008000n,0x000000000000808bn,0x0000000080000001n,0x8000000080008081n,0x8000000000008009n,0x000000000000008an,0x0000000000000088n,0x0000000080008009n,0x000000008000000an,0x000000008000808bn,0x800000000000008bn,0x8000000000008089n,0x8000000000008003n,0x8000000000008002n,0x8000000000000080n,0x000000000000800an,0x800000008000000an,0x8000000080008081n,0x8000000000008080n,0x0000000080000001n,0x8000000080008008n];
+  const ROT = [[0,36,3,41,18],[1,44,10,45,2],[62,6,43,15,61],[28,55,25,21,56],[27,20,39,8,14]];
+  const rol = (v, n) => n === 0 ? v : ((v << BigInt(n)) | (v >> BigInt(64 - n))) & M;
+  function f(A) {
+    for (let r = 0; r < 24; r++) {
+      const C = [], D = [];
+      for (let x = 0; x < 5; x++) C[x] = A[x] ^ A[x + 5] ^ A[x + 10] ^ A[x + 15] ^ A[x + 20];
+      for (let x = 0; x < 5; x++) D[x] = C[(x + 4) % 5] ^ rol(C[(x + 1) % 5], 1);
+      for (let i = 0; i < 25; i++) A[i] ^= D[i % 5];
+      const B = new Array(25);
+      for (let x = 0; x < 5; x++) for (let y = 0; y < 5; y++) B[y + 5 * ((2 * x + 3 * y) % 5)] = rol(A[x + 5 * y], ROT[x][y]);
+      for (let x = 0; x < 5; x++) for (let y = 0; y < 5; y++) A[x + 5 * y] = B[x + 5 * y] ^ ((M ^ B[(x + 1) % 5 + 5 * y]) & B[(x + 2) % 5 + 5 * y]);
+      A[0] ^= RC[r];
+    }
+  }
+  return data => {
+    const rate = 136, n = Math.floor(data.length / rate) + 1;
+    const buf = new Uint8Array(n * rate); buf.set(data); buf[data.length] ^= 0x01; buf[n * rate - 1] ^= 0x80;
+    const A = new Array(25).fill(0n);
+    for (let b = 0; b < n; b++) {
+      for (let i = 0; i < rate / 8; i++) {
+        let lane = 0n;
+        for (let j = 7; j >= 0; j--) lane = (lane << 8n) | BigInt(buf[b * rate + i * 8 + j]);
+        A[i] ^= lane;
+      }
+      f(A);
+    }
+    const out = new Uint8Array(32);
+    for (let i = 0; i < 4; i++) { let l = A[i]; for (let j = 0; j < 8; j++) { out[i * 8 + j] = Number(l & 0xffn); l >>= 8n; } }
+    return out;
+  };
+})();
+const secp = (() => {
+  const P = (1n << 256n) - (1n << 32n) - 977n;
+  const N = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEBAAEDCE6AF48A03BBFD25E8CD0364141n;
+  const G = [0x79BE667EF9DCBBAC55A06295CE870B07029BFCDB2DCE28D959F2815B16F81798n, 0x483ADA7726A3C4655DA4FBFC0E1108A8FD17B448A68554199C47D08FFB10D4B8n];
+  const mod = (a, m = P) => ((a % m) + m) % m;
+  const inv = (a, m = P) => { let r0 = mod(a, m), r1 = m, s0 = 1n, s1 = 0n; while (r1) { const q = r0 / r1; [r0, r1] = [r1, r0 - q * r1]; [s0, s1] = [s1, s0 - q * s1]; } return mod(s0, m); };
+  const pow = (b, e, m) => { let r = 1n; b = mod(b, m); while (e > 0n) { if (e & 1n) r = r * b % m; b = b * b % m; e >>= 1n; } return r; };
+  const add = (p, q) => {
+    if (!p) return q; if (!q) return p;
+    if (p[0] === q[0]) {
+      if (mod(p[1] + q[1]) === 0n) return null;
+      const l = mod(3n * p[0] * p[0] * inv(2n * p[1])), x = mod(l * l - 2n * p[0]);
+      return [x, mod(l * (p[0] - x) - p[1])];
+    }
+    const l = mod((q[1] - p[1]) * inv(q[0] - p[0])), x = mod(l * l - p[0] - q[0]);
+    return [x, mod(l * (p[0] - x) - p[1])];
+  };
+  const mul = (k, pt) => { let r = null, a = pt; while (k > 0n) { if (k & 1n) r = add(r, a); a = add(a, a); k >>= 1n; } return r; };
+  const big = b => BigInt(toHex(b));
+  const addrOf = pt => toHex(keccak(fromHex(pt[0].toString(16).padStart(64, '0') + pt[1].toString(16).padStart(64, '0'))).slice(12));
+  return {
+    N, G, mul, mod, inv, addrOf,
+    recover(hash, sig) {                       // sig: 65 bytes r||s||v, returns lowercase 0x address
+      const r = big(sig.slice(0, 32)), s = big(sig.slice(32, 64));
+      let v = sig[64]; if (v >= 27) v -= 27;
+      if (v > 1 || r <= 0n || r >= N || s <= 0n || s >= N) throw new Error('bad signature');
+      let y = pow(mod(r ** 3n + 7n), (P + 1n) / 4n, P);
+      if (mod(y * y) !== mod(r ** 3n + 7n)) throw new Error('bad signature');
+      if ((y & 1n) !== BigInt(v)) y = P - y;
+      const z = big(hash), ri = inv(r, N);
+      const Q = add(mul(mod(-z * ri, N), G), mul(mod(s * ri, N), [r, y]));
+      if (!Q) throw new Error('bad signature');
+      return addrOf(Q);
+    }
+  };
+})();
+const hashPersonal = msg => {
+  const m = utf8(msg), pre = utf8('\x19Ethereum Signed Message:\n' + m.length);
+  const all = new Uint8Array(pre.length + m.length); all.set(pre); all.set(m, pre.length);
+  return keccak(all);
+};
+const canon = v => Array.isArray(v) ? '[' + v.map(canon).join(',') + ']' : v && typeof v === 'object' ? '{' + Object.keys(v).sort().map(k => JSON.stringify(k) + ':' + canon(v[k])).join(',') + '}' : JSON.stringify(v);
+
+  const W = () => window.TOGWallet || { address: () => '', provider: () => null, connect() {}, subscribe() {} };
+  const logEl = $id('dLog');
+  const log = m => { logEl.textContent += `[${new Date().toLocaleTimeString()}] ${m}\n`; logEl.scrollTop = logEl.scrollHeight; };
+  const shortA = a => (a ? a.slice(0, 6) + '…' + a.slice(-4) : '—');
+  const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  const DIMS = [['license', 'License'], ['royalties', 'Royalties'], ['attribution', 'Attribution'], ['transfer', 'Transfer'], ['usage', 'Usage'], ['status', 'Status']];
+  const BADGE = { declared: 'Declared', signed: 'Signed', onchain: 'On-chain', unverified: 'Unverified' };
+  const S = { mode: 'sample', asset: null, evidence: null, proof: null, signedBody: null, snap: null };
+  const msgEl = $id('dMsg');
+  const setMsg = (t, bad) => { msgEl.textContent = t || ''; msgEl.classList.toggle('bad', !!bad); };
+
+  /* ---------- chain reads (eth_call through the connected wallet) ---------- */
+  const pad = h => h.replace(/^0x/, '').padStart(64, '0');
+  const tokenHex = id => pad(BigInt(id).toString(16));
+  const wordAddr = w => '0x' + w.replace(/^0x/, '').slice(-40);
+  async function call(to, data) {
+    const p = W().provider();
+    if (!p) throw new Error('Connect a wallet first.');
+    const r = await p.request({ method: 'eth_call', params: [{ to, data }, 'latest'] });
+    log(`eth_call ${shortA(to)} ${data.slice(0, 10)} → ${String(r).slice(0, 24)}…`);
+    return r;
+  }
+  const supports = async (c, id) => { try { return BigInt(await call(c, '0x01ffc9a7' + id + '0'.repeat(56))) === 1n; } catch (_) { return false; } };
+  function decodeString(hex) {
+    const h = hex.replace(/^0x/, ''), len = parseInt(h.slice(64, 128), 16);
+    return new TextDecoder().decode(fromHex(h.slice(128, 128 + len * 2)));
+  }
+  async function readAsset(contract, tokenId) {
+    const p = W().provider();
+    if (!p) throw new Error('Connect a wallet first.');
+    const chainId = parseInt(await p.request({ method: 'eth_chainId' }), 16);
+    if (!(await supports(contract, '80ac58cd'))) throw new Error('That contract does not report ERC-721 support. Check the address and that your wallet is on the right network.');
+    let name = 'Unnamed asset';
+    try { name = decodeString(await call(contract, '0x06fdde03')) || name; } catch (_) {}
+    let owner;
+    try { owner = wordAddr(await call(contract, '0x6352211e' + tokenHex(tokenId))); }
+    catch (_) { throw new Error('That token ID does not exist on this contract.'); }
+    const has2981 = await supports(contract, '2a55205a');
+    return { chainId, contract, tokenId: String(tokenId), name, owner, has2981 };
+  }
+  async function chainEvidence(asset, creator, roy) {
+    const p = W().provider();
+    if (!p) throw new Error('Connect a wallet first.');
+    const chainId = parseInt(await p.request({ method: 'eth_chainId' }), 16);
+    if (chainId !== asset.chainId) throw new Error(`Your wallet is on chain ${chainId} but the asset lives on chain ${asset.chainId}. Switch networks and retry.`);
+    const owner = wordAddr(await call(asset.contract, '0x6352211e' + tokenHex(asset.tokenId)));
+    const ev = { onchain: true, chainId, ownerIsCreator: owner.toLowerCase() === String(creator).toLowerCase(), royalties: 'unsupported' };
+    if (await supports(asset.contract, '2a55205a')) {
+      const w = (await call(asset.contract, '0x2a55205a' + tokenHex(asset.tokenId) + pad((10000).toString(16)))).replace(/^0x/, '');
+      const recv = ('0x' + w.slice(24, 64)).toLowerCase(), bps = Number(BigInt('0x' + w.slice(64, 128)));
+      ev.reportedPercent = bps / 100; ev.reportedReceiver = recv;
+      ev.royalties = (Math.abs(bps / 100 - roy.percent) < 1e-9 && (!roy.recipient || recv === roy.recipient.toLowerCase())) ? 'match' : 'mismatch';
+    }
+    return ev;
+  }
+
+  /* ---------- the profile ---------- */
+  const rightsFromForm = () => {
+    const me = W().address();
+    const to = $id('fRoyTo').value.trim() || me || null;
+    return {
+      license: { value: $id('fLicense').value },
+      royalties: { value: { percent: Number($id('fRoy').value || 0), recipient: to ? to.toLowerCase() : null } },
+      attribution: { value: { text: $id('fAttr').value.trim(), required: $id('fAttrReq').checked } },
+      transfer: { value: $id('fTransfer').value },
+      usage: { value: $$('input[name=usage]:checked', root).map(i => i.value) },
+      status: { value: $id('fStatus').value }
+    };
+  };
+  const assetObj = () => (S.mode === 'real' && S.asset
+    ? { mode: 'onchain', chainId: S.asset.chainId, contract: S.asset.contract.toLowerCase(), tokenId: S.asset.tokenId, name: S.asset.name, standard: 'ERC-721' }
+    : { mode: 'sample', id: 'TOG-DEMO-001', name: 'TOG Demo Asset #001' });
+  const bodyCore = () => ({ type: 'TOG/PDRL', version: 1, asset: assetObj(), creator: (W().address() || '').toLowerCase() || null, rights: rightsFromForm(), evidence: S.evidence || { onchain: false } });
+  const assetLabel = a => (a.mode === 'onchain' ? `eip155:${a.chainId}/erc721:${a.contract}/${a.tokenId}` : `sample:${a.id}`);
+  const msgFor = (body, hash) => `TOG Portable Rights Profile v1\nAsset: ${assetLabel(body.asset)}\nCreator: ${body.creator}\nProfile hash (keccak256): ${hash}\n\nBy signing, I assert the rights described by this profile for this asset.`;
+  const valueText = (d, v) => {
+    if (d === 'royalties') return `${v.percent}% to ${shortA(v.recipient)}`;
+    if (d === 'attribution') return v.text ? `${v.text}${v.required ? ' (required)' : ''}` : 'None specified';
+    if (d === 'usage') return v.length ? v.join(', ') : 'No usage granted';
+    return v;
+  };
+  const statesFor = (signedOk, ev) => {
+    const o = {};
+    DIMS.forEach(([d]) => { o[d] = d === 'royalties' && ev && ev.royalties === 'match' ? 'onchain' : signedOk ? 'signed' : 'declared'; });
+    return o;
+  };
+  const rowHtml = (d, label, val, st) => `<div class="pp-row"><svg class="ic" viewBox="0 0 120 120" aria-hidden="true"><use class="f" href="#i-${d}"/></svg><div><b>${label}</b><span>${esc(val)}</span></div><em class="badge b-${st}">${BADGE[st]}</em></div>`;
+
+  function exportObj() {
+    return S.proof ? Object.assign({}, S.signedBody, { proof: S.proof }) : Object.assign({}, bodyCore(), { issuedAt: null, proof: null });
+  }
+  function render() {
+    const core = bodyCore();
+    if (S.proof && S.snap !== canon(core)) { S.proof = null; S.signedBody = null; log('Profile changed, signature cleared. Sign again to re-issue.'); }
+    const signed = !!S.proof;
+    const st = statesFor(signed, S.evidence);
+    $id('ppRows').innerHTML = DIMS.map(([d, l]) => rowHtml(d, l, valueText(d, core.rights[d].value), st[d])).join('');
+    $id('ppAsset').textContent = core.asset.name;
+    $id('ppAssetId').textContent = assetLabel(core.asset);
+    const ev = S.evidence;
+    $id('ppAuth').textContent = ev && ev.onchain ? (ev.ownerIsCreator ? 'Signer owns this token (on-chain)' : 'Signer does NOT own this token') : 'Not checked on-chain';
+    $id('ppHash').textContent = signed ? S.proof.hash.slice(0, 12) + '…' + S.proof.hash.slice(-8) : 'not signed yet';
+    $id('ppSigner').textContent = signed ? S.signedBody.creator : '—';
+    $id('ppJson').textContent = JSON.stringify(exportObj(), null, 2);
+    $id('dCheck').disabled = S.mode !== 'real';
+    $id('dCheck').title = S.mode !== 'real' ? 'Switch to a real NFT to read contract data' : '';
+  }
+
+  function syncWallet() {
+    const a = W().address();
+    $id('dWalletNote').textContent = a ? `Connected as ${a}` : 'Not connected';
+    $id('dConnect').textContent = a ? 'Connected' : 'Connect wallet';
+    $id('dConnect').classList.toggle('done', !!a);
+    $id('fRoyTo').placeholder = a ? `Defaults to ${shortA(a)}` : 'Defaults to your wallet';
+    render();
+  }
+
+  /* ---------- actions ---------- */
+  async function loadAsset() {
+    setMsg('');
+    const c = $id('aContract').value.trim(), t = $id('aToken').value.trim();
+    if (!/^0x[0-9a-fA-F]{40}$/.test(c)) return setMsg('Enter a valid contract address (0x…).', true);
+    if (!/^\d+$/.test(t)) return setMsg('Token ID must be a number.', true);
+    if (!W().provider()) { W().connect(); return setMsg('Connect your wallet first, then press Read from chain again.'); }
+    $id('aLoad').disabled = true;
+    try {
+      S.asset = await readAsset(c, t); S.evidence = null;
+      const box = $id('dAsset');
+      box.hidden = false;
+      box.innerHTML = `<b>${esc(S.asset.name)}</b> #${esc(S.asset.tokenId)}<span>ERC-721 · chain ${S.asset.chainId} · owner ${shortA(S.asset.owner)} · ERC-2981 royalties ${S.asset.has2981 ? 'supported' : 'not supported'}</span>`;
+      setMsg('Asset loaded from the chain.');
+    } catch (e) { S.asset = null; $id('dAsset').hidden = true; setMsg(e.message || 'Could not read that asset.', true); }
+    $id('aLoad').disabled = false; render();
+  }
+  async function checkOnchain() {
+    setMsg('');
+    if (S.mode !== 'real' || !S.asset) return setMsg('Choose “Real NFT” and read an asset from the chain first.', true);
+    if (!W().address()) { W().connect(); return setMsg('Connect your wallet first.'); }
+    $id('dCheck').disabled = true;
+    try {
+      S.evidence = await chainEvidence(S.asset, W().address(), rightsFromForm().royalties.value);
+      const e = S.evidence;
+      setMsg(`Ownership: ${e.ownerIsCreator ? 'your wallet owns this token.' : 'your wallet does not own this token.'} Royalties: ${e.royalties === 'match' ? 'match the contract (ERC-2981).' : e.royalties === 'mismatch' ? `contract reports ${e.reportedPercent}% to ${shortA(e.reportedReceiver)}.` : 'contract has no ERC-2981 data.'}`, e.royalties === 'mismatch' || !e.ownerIsCreator);
+    } catch (e) { setMsg(e.message || 'On-chain check failed.', true); }
+    $id('dCheck').disabled = false; render();
+  }
+  async function sign() {
+    setMsg('');
+    const me = W().address();
+    if (!me) { W().connect(); return setMsg('Connect your wallet first, then press Sign again.'); }
+    $id('dSign').disabled = true;
+    try {
+      const body = Object.assign({}, bodyCore(), { issuedAt: new Date().toISOString() });
+      const hash = toHex(keccak(utf8(canon(body))));
+      const message = msgFor(body, hash);
+      log(`personal_sign requested · profile hash ${hash.slice(0, 18)}…`);
+      const sig = await W().provider().request({ method: 'personal_sign', params: [toHex(utf8(message)), me] });
+      const rec = secp.recover(hashPersonal(message), fromHex(sig));
+      if (rec !== me.toLowerCase()) throw new Error('The signature did not verify against your address.');
+      log(`signature verified locally · signer ${rec}`);
+      S.proof = { scheme: 'eip191-personal_sign', hash, signature: sig }; S.signedBody = body; S.snap = canon(bodyCore());
+      setMsg('Signed. Anyone can now verify this profile without trusting you or us.');
+    } catch (e) { setMsg(e && e.code === 4001 ? 'Signature request rejected in your wallet.' : (e.message || 'Signing failed.'), true); }
+    $id('dSign').disabled = false; render();
+  }
+
+  /* ---------- reader / verifier ---------- */
+  function verifyText(text) {
+    const checks = []; let obj;
+    try { obj = JSON.parse(text); checks.push([true, 'JSON parsed']); } catch (_) { return { checks: [[false, 'This is not valid JSON']], ok: false }; }
+    if (!obj || obj.type !== 'TOG/PDRL' || obj.version !== 1) { checks.push([false, 'Not a TOG/PDRL v1 profile']); return { checks, ok: false }; }
+    checks.push([true, 'Format: TOG/PDRL v1']);
+    const proof = obj.proof;
+    if (!proof || !proof.signature) { checks.push([false, 'No signature attached', 'unsigned profile']); return { checks, ok: false, obj }; }
+    const body = Object.assign({}, obj); delete body.proof;
+    const hash = toHex(keccak(utf8(canon(body))));
+    const hashOk = hash === proof.hash;
+    checks.push([hashOk, hashOk ? 'Contents match the signed hash' : 'Contents changed after signing', hashOk ? shortA(hash) : `signed ${shortA(proof.hash)} · now ${shortA(hash)}`]);
+    let rec = null;
+    try { rec = secp.recover(hashPersonal(msgFor(body, hash)), fromHex(proof.signature)); } catch (_) {}
+    const same = !!rec && !!body.creator && rec === String(body.creator).toLowerCase();
+    checks.push([same, same ? 'Signature recovers to the creator wallet' : 'Signature does not match the creator wallet', rec ? `recovered ${rec}` : 'could not recover a signer']);
+    return { checks, ok: hashOk && same, obj: body, signer: rec };
+  }
+  function showVerify(res, ev) {
+    const out = $id('vOut');
+    const checks = res.checks.concat(ev || []);
+    const ok = res.ok;
+    let html = `<div class="v-banner ${ok ? 'good' : 'bad'}"><b>${ok ? 'Valid profile' : 'Invalid profile'}</b><span>${ok ? `Signed by ${esc(res.signer)}` : 'The contents or the signature do not check out.'}</span></div>`;
+    html += '<ul class="v-list">' + checks.map(c => `<li class="${c[0] ? 'ok' : 'no'}"><i>${c[0] ? '✓' : '✕'}</i><div><b>${esc(c[1])}</b>${c[2] ? `<span>${esc(c[2])}</span>` : ''}</div></li>`).join('') + '</ul>';
+    if (res.obj && res.obj.rights) {
+      const live = ev && ev.liveEvidence;
+      const st = {};
+      DIMS.forEach(([d]) => { st[d] = !ok ? 'unverified' : (d === 'royalties' && live && live.royalties === 'match') ? 'onchain' : 'signed'; });
+      html += '<div class="pp-rows v-rows">' + DIMS.map(([d, l]) => res.obj.rights[d] ? rowHtml(d, l, valueText(d, res.obj.rights[d].value), st[d]) : '').join('') + '</div>';
+    }
+    out.innerHTML = html;
+  }
+  function runVerify() { showVerify(verifyText($id('vIn').value)); }
+  async function liveCheck() {
+    const res = verifyText($id('vIn').value);
+    if (!res.ok) return showVerify(res);
+    const a = res.obj.asset;
+    if (!a || a.mode !== 'onchain') return showVerify(res, [[false, 'Sample asset: nothing to check on-chain', 'create a profile for a real NFT to see this']]);
+    if (!W().provider()) { W().connect(); return showVerify(res, [[false, 'Connect your wallet to re-check on-chain']]); }
+    try {
+      const r = res.obj.rights.royalties.value;
+      const ev = await chainEvidence({ contract: a.contract, tokenId: a.tokenId, chainId: a.chainId }, res.obj.creator, r);
+      const extra = [
+        [ev.ownerIsCreator, ev.ownerIsCreator ? 'Signer owns the token right now (on-chain)' : 'Signer does not currently own this token'],
+        [ev.royalties === 'match', ev.royalties === 'match' ? 'Royalty claim matches the contract (ERC-2981)' : ev.royalties === 'mismatch' ? 'Royalty claim differs from the contract' : 'Contract has no ERC-2981 royalty data', ev.reportedReceiver ? `contract: ${ev.reportedPercent}% to ${shortA(ev.reportedReceiver)}` : '']
+      ];
+      extra.liveEvidence = ev;
+      showVerify(res, extra);
+    } catch (e) { showVerify(res, [[false, e.message || 'On-chain re-check failed']]); }
+  }
+  function tamper() {
+    try {
+      const o = JSON.parse($id('vIn').value);
+      const v = o.rights.royalties.value;
+      v.percent = Number(v.percent) + 1;
+      $id('vIn').value = JSON.stringify(o, null, 2);
+      setTimeout(runVerify, 0);
+    } catch (_) { $id('vOut').innerHTML = '<p class="d-note">Load or paste a valid profile first, then tamper with it.</p>'; }
+  }
+
+  /* ---------- wiring ---------- */
+  $$('.demo-tabs button', root).forEach(b => b.addEventListener('click', () => {
+    $$('.demo-tabs button', root).forEach(x => { x.classList.toggle('on', x === b); x.setAttribute('aria-selected', String(x === b)); });
+    $$('.demo-pane', root).forEach(p => { p.hidden = p.dataset.pane !== b.dataset.tab; });
+  }));
+  $$('#dMode button', root).forEach(b => b.addEventListener('click', () => {
+    S.mode = b.dataset.mode; S.evidence = null;
+    $$('#dMode button', root).forEach(x => x.classList.toggle('on', x === b));
+    $id('dReal').hidden = S.mode !== 'real';
+    setMsg(''); render();
+  }));
+  $id('aExample').addEventListener('click', () => {
+    $id('aContract').value = '0xBC4CA0EdA7647A8aB7C2061c2E118A18a936f13D';
+    $id('aToken').value = '1';
+    setMsg('Example filled in. Your wallet must be on Ethereum Mainnet to read it.');
+  });
+  $id('dConnect').addEventListener('click', () => W().connect());
+  $id('aLoad').addEventListener('click', loadAsset);
+  $id('dCheck').addEventListener('click', checkOnchain);
+  $id('dSign').addEventListener('click', sign);
+  $id('vRun').addEventListener('click', runVerify);
+  $id('vTamper').addEventListener('click', tamper);
+  $id('vLive').addEventListener('click', liveCheck);
+  $id('vLoad').addEventListener('click', () => {
+    if (!S.proof) { $id('vOut').innerHTML = '<p class="d-note">Sign a profile on the Create tab first.</p>'; return; }
+    $id('vIn').value = JSON.stringify(exportObj(), null, 2);
+    runVerify();
+  });
+  $id('ppCopy').addEventListener('click', async () => {
+    try { await navigator.clipboard.writeText(JSON.stringify(exportObj(), null, 2)); setMsg('Profile JSON copied.'); } catch (_) { setMsg('Copy failed. Use “View the object” and copy from there.', true); }
+  });
+  $id('ppDl').addEventListener('click', () => {
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([JSON.stringify(exportObj(), null, 2)], { type: 'application/json' }));
+    a.download = S.proof ? 'tog-rights-profile.json' : 'tog-rights-profile-unsigned.json';
+    a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+  });
+  $$('input,select', $('.demo-form', root)).forEach(el => el.addEventListener(el.type === 'checkbox' || el.tagName === 'SELECT' ? 'change' : 'input', render));
+  const w0 = window.TOGWallet; if (w0) w0.subscribe(syncWallet);
+  syncWallet();
+  window.__TOG_DEMO__ = { verifyText };
+})();
+
 /* links that point nowhere yet should not jump to the top */
 document.addEventListener('click', e => {
   const a = e.target.closest('a[href="#"]');
@@ -196,8 +555,8 @@ document.addEventListener('click', e => {
 });
 
 /* ================= SCENE CONFIG ================= */
-const ORDER = ['hero', 'problem', 'how', 'signals', 'layer', 'surfaces', 'final'];
-const LABELS = ['Intro', 'The problem', 'How it works', 'Six rights', 'The layer', 'Surfaces', 'Get started'];
+const ORDER = ['hero', 'problem', 'how', 'signals', 'layer', 'surfaces', 'demo', 'final'];
+const LABELS = ['Intro', 'The problem', 'How it works', 'Six rights', 'The layer', 'Surfaces', 'Live demo', 'Get started'];
 // pose: x,y as viewport fractions, s scale, ry/rx degrees, o opacity, ex = layer explosion 0..1
 const P = (x, y, s, ry, rx, o, ex) => ({ x, y, s, ry, rx, o, ex });
 const POSES = {
@@ -208,6 +567,7 @@ const POSES = {
     signals: P(.5, .5, 1.3, 1080, 0, .1, 0),
     layer: P(.5, .52, 1, 1474, 14, 1, 0),
     surfaces: P(.5, .5, 1.4, 1800, 0, .07, 0),
+    demo: P(.5, .5, 1.3, 1960, 0, .05, 0),
     final: P(.5, .3, .62, 2120, 0, 1, 0)
   },
   m: {
@@ -217,6 +577,7 @@ const POSES = {
     signals: P(.5, .5, 1.1, 1080, 0, .1, 0),
     layer: P(.5, .52, .9, 1474, 14, 1, 0),
     surfaces: P(.5, .5, 1.2, 1800, 0, .06, 0),
+    demo: P(.5, .5, 1.1, 1960, 0, .05, 0),
     final: P(.5, .24, .6, 2120, 0, 1, 0)
   }
 };
