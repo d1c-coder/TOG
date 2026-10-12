@@ -2,112 +2,177 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="description" content="TOG is a Portable Digital Rights Layer for digital assets.">
+<meta name="theme-color" content="#030305">
 <title>TOG | Portable Digital Rights Layer</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="home.css">
 </head>
-<body>
-<header class="nav donut-nav reference-header">
-  <a class="brand" href="index.html"><img src="assets/tog-logo-nav.png" alt="TOG"><span>TOG</span></a>
-  <div class="nav-spacer"></div>
-  <button class="connect-wallet" type="button" data-connect-wallet>Connect wallet</button>
-  <span class="ca-coming-soon">CA COMING SOON</span>
-  <a class="nav-cta" href="verify.html">Explore TOG <span>↗</span></a>
-  <button class="menu" aria-label="Open menu"><i></i><i></i><i></i></button>
-</header>
-<div class="mobile-menu">
-  <a href="system.html">System</a><a href="rights.html">Rights</a><a href="verify.html">Verify</a><a href="portability.html">Portability</a><a href="developers.html">Developers</a><a href="vision.html">Vision</a><a href="docs.html">Docs</a>
-  <div class="mobile-socials"><a href="https://x.com/tog_protocol" target="_blank" rel="noopener noreferrer" aria-label="TOG on X"><img src="assets/x.svg" alt=""></a></div>
-</div>
+<body class="home">
 
+<!-- Shared SVG defs: icon gradient + bespoke glyphs -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <linearGradient id="gStroke" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="120" y2="120">
+      <stop offset="0" stop-color="#f6d9ff"/><stop offset=".5" stop-color="#8f8cff"/><stop offset="1" stop-color="#4bd0ff"/>
+    </linearGradient>
+    <linearGradient id="gStroke2" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="180" y2="116">
+      <stop offset="0" stop-color="#f6d9ff"/><stop offset=".5" stop-color="#8f8cff"/><stop offset="1" stop-color="#4bd0ff"/>
+    </linearGradient>
 
-<main class="page">
-<section class="hero donut-hero">
-  <video class="hero-video" autoplay muted loop playsinline preload="auto" poster="assets/hero-poster.jpg" aria-hidden="true"><source src="assets/aurora.mp4" type="video/mp4"><source src="assets/hero-wallpaper.mp4" type="video/mp4"></video>
-  
-  <div class="hero-video-shade"></div><div class="hero-video-grain"></div>
-  <div class="hero-copy-column">
-    <div class="eyebrow">PORTABLE DIGITAL RIGHTS LAYER <span>01</span></div>
-    <h1>Rights that travel<br>with <em>every asset.</em></h1>
-    <p class="hero-copy">A portable rights profile that keeps license, royalties, attribution, transfer, usage and status readable wherever a digital asset moves.</p>
-    <div class="hero-stats-card">
-      <div><strong>06</strong><span>RIGHTS DIMENSIONS</span></div>
-      <div><strong>03</strong><span>VERIFICATION STATES</span></div>
-      <div><strong>01</strong><span>PORTABLE PROFILE</span></div>
-      <div><strong>∞</strong><span>SUPPORTED SURFACES</span></div>
-    </div>
-    <div class="hero-actions"><a class="button primary" href="verify.html">Explore TOG <span>↗</span></a><a class="button" href="#how-it-works">Why TOG ? <span>↘</span></a></div>
+    <g id="i-license"><path d="M34 20h34l18 18v50a6 6 0 0 1-6 6H34a6 6 0 0 1-6-6V26a6 6 0 0 1 6-6z"/><path d="M68 20v18h18"/><path d="M40 54h30M40 66h20"/><circle cx="78" cy="88" r="14"/><path d="M72 88l4 4 8-9"/></g>
+    <g id="i-royalties"><circle cx="60" cy="24" r="12"/><path d="M60 36v22"/><path d="M60 58C60 72 30 70 30 88M60 58v30M60 58C60 72 90 70 90 88"/><circle cx="30" cy="96" r="8"/><circle cx="60" cy="96" r="8"/><circle cx="90" cy="96" r="8"/></g>
+    <g id="i-attribution"><circle cx="60" cy="36" r="14"/><path d="M32 76c2-18 14-26 28-26s26 8 28 26"/><path d="M30 92h60"/><path d="M44 104h32"/></g>
+    <g id="i-transfer"><rect x="14" y="40" width="30" height="40" rx="8"/><rect x="76" y="40" width="30" height="40" rx="8"/><path d="M50 52h20M64 46l6 6-6 6"/><path d="M70 70H50M56 64l-6 6 6 6"/></g>
+    <g id="i-usage"><circle cx="60" cy="60" r="38"/><circle cx="60" cy="60" r="18"/><path d="M60 14v14M60 92v14M14 60h14M92 60h14"/><circle cx="60" cy="60" r="3"/></g>
+    <g id="i-status"><path d="M18 84a42 42 0 0 1 84 0"/><path d="M60 84l22-26"/><circle cx="60" cy="84" r="6"/><path d="M26 66l6 4M60 38v8M94 66l-6 4"/><path d="M30 104h60"/></g>
+
+    <g id="t-identify"><rect x="20" y="22" width="72" height="72" rx="14"/><path d="M36 44h40M36 58h28M36 72h34"/><circle cx="130" cy="58" r="30"/><circle cx="130" cy="58" r="14"/><path d="M130 22v10M130 84v10M94 58h10M156 58h10"/></g>
+    <g id="t-describe"><path d="M90 14l36 21v42L90 98 54 77V35z"/><circle cx="90" cy="14" r="5"/><circle cx="126" cy="35" r="5"/><circle cx="126" cy="77" r="5"/><circle cx="90" cy="98" r="5"/><circle cx="54" cy="77" r="5"/><circle cx="54" cy="35" r="5"/><circle cx="90" cy="56" r="10"/><path d="M90 46V19M99 51l23-13M99 61l23 13M90 66v27M81 61L58 74M81 51L58 38"/></g>
+    <g id="t-verify"><rect x="20" y="16" width="140" height="22" rx="11"/><rect x="20" y="47" width="140" height="22" rx="11"/><rect x="20" y="78" width="140" height="22" rx="11"/><circle cx="40" cy="27" r="4"/><circle cx="40" cy="58" r="4"/><circle cx="40" cy="89" r="4"/><path d="M64 27h40M64 58h56M64 89h46"/><path d="M130 89l6 6 12-13"/></g>
+    <g id="t-travel"><circle cx="26" cy="82" r="10"/><circle cx="90" cy="30" r="10"/><circle cx="154" cy="82" r="10"/><path d="M34 74C50 44 66 34 80 32M100 32c14 2 38 14 46 42"/><path d="M140 66l8 10 10-8"/></g>
+
+    <g id="s-wallet"><rect x="14" y="30" width="92" height="64" rx="14"/><path d="M14 46h92"/><rect x="74" y="60" width="32" height="18" rx="9"/><path d="M28 30l50-14 8 14"/></g>
+    <g id="s-market"><path d="M18 46l8-26h68l8 26z"/><path d="M26 46v50h68V46"/><path d="M50 96V68h20v28"/></g>
+    <g id="s-apps"><path d="M44 34L18 60l26 26M76 34l26 26-26 26"/><path d="M68 28L52 92"/></g>
+    <g id="s-creators"><path d="M60 14l26 40-26 52-26-52z"/><path d="M60 54v52"/><circle cx="60" cy="54" r="7"/></g>
+  </defs>
+</svg>
+
+<header class="nav" id="nav">
+  <a class="brand" href="index.html" aria-label="TOG home"><img src="assets/tog-logo-nav.png" alt=""><span>TOG</span></a>
+  <div class="nav-right">
+    <button class="connect-wallet" type="button" data-connect-wallet>Connect wallet</button>
+    <button class="menu" id="menuBtn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenu"><i></i><i></i></button>
   </div>
-  <div class="scroll-hint">SCROLL TO EXPLORE <b>⌄</b></div>
-</section>
+</header>
 
+<nav class="mobile-menu" id="mobileMenu" aria-label="Site">
+  <a href="system.html" style="--n:0">System</a>
+  <a href="rights.html" style="--n:1">Rights</a>
+  <a href="verify.html" style="--n:2">Verify</a>
+  <a href="portability.html" style="--n:3">Portability</a>
+  <a href="developers.html" style="--n:4">Developers</a>
+  <a href="vision.html" style="--n:5">Vision</a>
+  <a href="docs.html" style="--n:6">Docs</a>
+  <div class="mobile-socials"><a href="https://x.com/tog_protocol" target="_blank" rel="noopener noreferrer" aria-label="TOG on X"><img src="assets/x.svg" alt=""></a></div>
+</nav>
 
-<section class="section statement reveal scroll-section section-with-bg" data-next="How It Works" id="the-problem">
-  <img class="section-bg-image convo-bg" src="assets/convo-bg.png" alt="" aria-hidden="true">
-  <div class="section-bg-overlay"></div>
-  <div class="section-label">01 / THE PROBLEM</div>
-  <div><h2>Ownership can move.<br><em>Rights often do not.</em></h2><p>When a digital asset is sold, bridged or moved to another platform, the rights attached to it can lose their context. TOG is designed to make that rights context portable and readable.</p></div>
-</section>
+<!-- The 3D logo: a stack of layers that travels with the scroll -->
+<div class="logo-stage" id="logoStage" aria-hidden="true">
+  <div class="logo-glow"></div>
+  <div class="logo-float"><div class="logo-rig" id="logoRig"></div></div>
+</div>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs id="tintDefs"></defs></svg>
 
-<section class="section how scroll-section" id="how-it-works" data-next="The Signals">
-  <img class="how-bg-image" src="assets/agentic-loop-bg.png" alt="" aria-hidden="true">
-  <div class="how-bg-overlay"></div>
-  <div class="section-label">02 / HOW IT WORKS</div>
-  <div class="how-head"><h2>One profile.<br><em>Everywhere.</em></h2><p>The asset moves. The rights context stays legible. TOG gives applications one shared object to read instead of a different interpretation on every platform.</p></div>
-  <div class="rights-demo reveal">
-    <div class="rights-demo-top"><span>TOG / PDRL OBJECT</span><span>LIVE DEMO</span></div>
-    <div class="rights-scene" aria-hidden="true">
-      <div class="rights-shadow"></div>
-      <div class="rights-stack">
-        <div class="rights-layer layer-back"></div>
-        <div class="rights-layer layer-mid"></div>
-        <div class="rights-card">
-          <div class="card-top"><span>PORTABLE RIGHTS OBJECT</span><b>TOG</b></div>
-          <div class="card-id">ASSET <strong>0x7F...A92C</strong></div>
-          <div class="card-title">Rights Profile</div>
-          <div class="card-lines"><span></span><span></span><span></span></div>
-          <div class="card-bottom"><i></i><span>VERIFIED ONCHAIN</span><b>01</b></div>
+<nav class="rail" id="rail" aria-label="Page sections"></nav>
+
+<main>
+  <!-- 1 / HERO -->
+  <section class="hero" id="top" data-pose="hero">
+    <video class="hero-video" autoplay muted loop playsinline preload="auto" poster="assets/hero-poster.jpg" aria-hidden="true"><source src="assets/aurora.mp4" type="video/mp4"><source src="assets/hero-wallpaper.mp4" type="video/mp4"></video>
+    <div class="hero-shade"></div>
+    <div class="hero-copy" id="heroCopy">
+      <div class="ca-badge"><i></i>CA coming soon</div>
+      <h1>Rights that travel<br><span class="grad">with every asset.</span></h1>
+      <p>A portable rights profile that keeps license, royalties, attribution, transfer, usage and status readable wherever a digital asset moves.</p>
+      <div class="hero-actions"><a class="button primary" href="verify.html">Explore TOG</a><a class="button" href="#the-problem">Why TOG?</a></div>
+    </div>
+    <div class="hero-facts" id="heroFacts">
+      <div><b>6</b><span>rights dimensions</span></div>
+      <div><b>3</b><span>verification states</span></div>
+      <div><b>1</b><span>portable profile</span></div>
+    </div>
+    <div class="scroll-cue" id="scrollCue"><span>Scroll</span><i></i></div>
+  </section>
+
+  <!-- 2 / THE PROBLEM -->
+  <section class="problem" id="the-problem" data-pose="problem">
+    <div class="pin">
+      <div class="problem-copy" id="problemCopy">
+        <h2><span class="ln">Ownership can move.</span><span class="ln dim">Rights often do not.</span></h2>
+        <p class="scrub">When a digital asset is sold, bridged or moved to another platform, the rights attached to it can lose their context. TOG is designed to make that rights context portable and readable.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3 / HOW IT WORKS: fly-through tunnel -->
+  <section class="tunnel" id="how-it-works" data-pose="how">
+    <div class="pin" id="tunnelPin">
+      <div class="tunnel-title" id="tunnelTitle">
+        <h2>One profile.<br>Everywhere.</h2>
+        <p>The asset moves. The rights context stays legible. TOG gives applications one shared object to read instead of a different interpretation on every platform.</p>
+      </div>
+      <div class="tunnel-world" id="tunnelWorld">
+        <article class="t-card"><svg class="t-ico" viewBox="0 0 180 116" aria-hidden="true"><use class="d2" href="#t-identify"/><use class="d1" href="#t-identify"/><use class="f" href="#t-identify"/></svg><span class="t-num">01</span><h3>Identify</h3><p>The asset gets a precise identity that the profile can describe.</p></article>
+        <article class="t-card"><svg class="t-ico" viewBox="0 0 180 116" aria-hidden="true"><use class="d2" href="#t-describe"/><use class="d1" href="#t-describe"/><use class="f" href="#t-describe"/></svg><span class="t-num">02</span><h3>Describe</h3><p>Rights are expressed across the six core dimensions.</p></article>
+        <article class="t-card"><svg class="t-ico" viewBox="0 0 180 116" aria-hidden="true"><use class="d2" href="#t-verify"/><use class="d1" href="#t-verify"/><use class="f" href="#t-verify"/></svg><span class="t-num">03</span><h3>Verify</h3><p>Each claim can carry its source and verification state.</p></article>
+        <article class="t-card"><svg class="t-ico" viewBox="0 0 180 116" aria-hidden="true"><use class="d2" href="#t-travel"/><use class="d1" href="#t-travel"/><use class="f" href="#t-travel"/></svg><span class="t-num">04</span><h3>Travel</h3><p>The profile remains readable across supported wallets, markets and apps.</p></article>
+      </div>
+      <div class="t-rail" id="tRail" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+    </div>
+  </section>
+
+  <!-- 4 / THE SIGNALS: rotating ring -->
+  <section class="ring" id="the-signals" data-pose="signals">
+    <div class="pin">
+      <div class="ring-head"><h2>Six rights, one profile.</h2></div>
+      <div class="ring-scene">
+        <div class="ring-rig" id="ringRig">
+          <article class="r-card" style="--i:0"><div class="r-ico"><svg class="ic" viewBox="0 0 120 120" aria-hidden="true"><use class="d2" href="#i-license"/><use class="d1" href="#i-license"/><use class="f" href="#i-license"/></svg></div><h3>License</h3><p>What the asset is licensed to allow.</p></article>
+          <article class="r-card" style="--i:1"><div class="r-ico"><svg class="ic" viewBox="0 0 120 120" aria-hidden="true"><use class="d2" href="#i-royalties"/><use class="d1" href="#i-royalties"/><use class="f" href="#i-royalties"/></svg></div><h3>Royalties</h3><p>Royalty information associated with the asset.</p></article>
+          <article class="r-card" style="--i:2"><div class="r-ico"><svg class="ic" viewBox="0 0 120 120" aria-hidden="true"><use class="d2" href="#i-attribution"/><use class="d1" href="#i-attribution"/><use class="f" href="#i-attribution"/></svg></div><h3>Attribution</h3><p>How attribution should appear when the asset is used.</p></article>
+          <article class="r-card" style="--i:3"><div class="r-ico"><svg class="ic" viewBox="0 0 120 120" aria-hidden="true"><use class="d2" href="#i-transfer"/><use class="d1" href="#i-transfer"/><use class="f" href="#i-transfer"/></svg></div><h3>Transfer</h3><p>Transfer conditions represented in the profile.</p></article>
+          <article class="r-card" style="--i:4"><div class="r-ico"><svg class="ic" viewBox="0 0 120 120" aria-hidden="true"><use class="d2" href="#i-usage"/><use class="d1" href="#i-usage"/><use class="f" href="#i-usage"/></svg></div><h3>Usage</h3><p>Usage context and restrictions that can be surfaced.</p></article>
+          <article class="r-card" style="--i:5"><div class="r-ico"><svg class="ic" viewBox="0 0 120 120" aria-hidden="true"><use class="d2" href="#i-status"/><use class="d1" href="#i-status"/><use class="f" href="#i-status"/></svg></div><h3>Status</h3><p>Current state and source status for the profile.</p></article>
         </div>
       </div>
-      <div class="demo-float f1">LICENSE <i>01</i></div>
-      <div class="demo-float f2">ROYALTIES <i>02</i></div>
-      <div class="demo-float f3">ATTRIBUTION <i>03</i></div>
-      <div class="demo-float f4">STATUS <i>06</i></div>
+      <div class="ring-readout" id="ringReadout" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
     </div>
-    <div class="rights-demo-footer"><span>IDENTITY</span><span>RIGHTS</span><span>SOURCE</span><span>STATUS</span></div>
-  </div>
-  <div class="how-steps reveal"><div><span>01</span><b>IDENTIFY</b><p>The asset gets a precise identity that the profile can describe.</p></div><div><span>02</span><b>DESCRIBE</b><p>Rights are expressed across the six core dimensions.</p></div><div><span>03</span><b>VERIFY</b><p>Each claim can carry its source and verification state.</p></div><div><span>04</span><b>TRAVEL</b><p>The profile remains readable across supported wallets, markets and apps.</p></div></div>
-</section>
+  </section>
 
-<section class="section signal-section scroll-section section-with-bg" id="the-signals" data-next="The Layer">
-  <img class="section-bg-image beyond-chat-bg" src="assets/beyond-chat-bg.png" alt="" aria-hidden="true">
-  <div class="section-bg-overlay"></div>
-  <div class="section-label">03 / THE SIGNALS</div>
-  <div class="signal-grid">
-    <article class="signal-card signal-license"><div class="signal-visual" aria-hidden="true"><div class="signal-visual-core"></div><div class="signal-visual-ring"></div><div class="signal-visual-line"></div><span></span></div><div class="signal-card-copy"><span class="signal-index">01</span><h3>LICENSE</h3><p>What the asset is licensed to allow.</p></div></article>
-    <article class="signal-card signal-royalties"><div class="signal-visual" aria-hidden="true"><div class="signal-visual-core"></div><div class="signal-visual-ring"></div><div class="signal-visual-line"></div><span></span></div><div class="signal-card-copy"><span class="signal-index">02</span><h3>ROYALTIES</h3><p>Royalty information associated with the asset.</p></div></article>
-    <article class="signal-card signal-attribution"><div class="signal-visual" aria-hidden="true"><div class="signal-visual-core"></div><div class="signal-visual-ring"></div><div class="signal-visual-line"></div><span></span></div><div class="signal-card-copy"><span class="signal-index">03</span><h3>ATTRIBUTION</h3><p>How attribution should appear when the asset is used.</p></div></article>
-    <article class="signal-card signal-transfer"><div class="signal-visual" aria-hidden="true"><div class="signal-visual-core"></div><div class="signal-visual-ring"></div><div class="signal-visual-line"></div><span></span></div><div class="signal-card-copy"><span class="signal-index">04</span><h3>TRANSFER</h3><p>Transfer conditions represented in the profile.</p></div></article>
-    <article class="signal-card signal-usage"><div class="signal-visual" aria-hidden="true"><div class="signal-visual-core"></div><div class="signal-visual-ring"></div><div class="signal-visual-line"></div><span></span></div><div class="signal-card-copy"><span class="signal-index">05</span><h3>USAGE</h3><p>Usage context and restrictions that can be surfaced.</p></div></article>
-    <article class="signal-card signal-status"><div class="signal-visual" aria-hidden="true"><div class="signal-visual-core"></div><div class="signal-visual-ring"></div><div class="signal-visual-line"></div><span></span></div><div class="signal-card-copy"><span class="signal-index">06</span><h3>STATUS</h3><p>Current state and source status for the profile.</p></div></article>
-  </div>
-</section>
+  <!-- 5 / THE LAYER: exploded logo -->
+  <section class="layer" id="the-layer" data-pose="layer">
+    <div class="pin">
+      <div class="layer-copy">
+        <h2>Make the rights visible.</h2>
+        <p>Built for a world where digital assets move fast and the context around them should not disappear.</p>
+      </div>
+      <ul class="layer-tags" aria-label="The six rights dimensions">
+        <li>License</li><li>Royalties</li><li>Attribution</li><li>Transfer</li><li>Usage</li><li>Status</li>
+      </ul>
+      <div class="layer-stats">
+        <div><b>Any</b><span>supported asset</span></div>
+        <div><b>Anywhere</b><span>readable context</span></div>
+        <div><b>One</b><span>common profile</span></div>
+      </div>
+    </div>
+  </section>
 
-<section class="section culture reveal scroll-section" id="the-layer" data-next="Built for the Surfaces">
-  <div class="culture-card"><div class="culture-orb"></div><div class="section-label">TOG / THE LAYER</div><h2>Make the<br><em>rights visible.</em></h2><p>Built for a world where digital assets move fast and the context around them should not disappear.</p><div class="culture-stats"><span><b>ANY</b><small>SUPPORTED ASSET</small></span><span><b>ANYWHERE</b><small>READABLE CONTEXT</small></span><span><b>ONE</b><small>COMMON PROFILE</small></span></div></div>
-</section>
+  <!-- 6 / SURFACES: stacking cards -->
+  <section class="surfaces" id="surfaces" data-pose="surfaces">
+    <div class="surfaces-head"><h2>Built for the surfaces</h2><p>Four places a rights profile gets used, and what each one does with it.</p></div>
+    <div class="stack" id="stack">
+      <article class="s-card" style="--i:0;--tint:rgba(120,100,255,.32)"><div class="s-copy"><span class="verb">Read</span><h3>Wallets</h3><p>Show license, royalties and status next to the asset a person holds.</p></div><svg class="s-ico" viewBox="0 0 120 120" aria-hidden="true"><use class="d2" href="#s-wallet"/><use class="d1" href="#s-wallet"/><use class="f" href="#s-wallet"/></svg></article>
+      <article class="s-card" style="--i:1;--tint:rgba(54,119,255,.3)"><div class="s-copy"><span class="verb">Surface</span><h3>Markets</h3><p>Display the rights context at the point of sale, not after it.</p></div><svg class="s-ico" viewBox="0 0 120 120" aria-hidden="true"><use class="d2" href="#s-market"/><use class="d1" href="#s-market"/><use class="f" href="#s-market"/></svg></article>
+      <article class="s-card" style="--i:2;--tint:rgba(217,79,255,.28)"><div class="s-copy"><span class="verb">Query</span><h3>Apps</h3><p>Ask one shared object for the rights instead of rebuilding them on every platform.</p></div><svg class="s-ico" viewBox="0 0 120 120" aria-hidden="true"><use class="d2" href="#s-apps"/><use class="d1" href="#s-apps"/><use class="f" href="#s-apps"/></svg></article>
+      <article class="s-card" style="--i:3;--tint:rgba(200,141,88,.3)"><div class="s-copy"><span class="verb">Provide</span><h3>Creators</h3><p>Publish the rights once and let them travel with the work.</p></div><svg class="s-ico" viewBox="0 0 120 120" aria-hidden="true"><use class="d2" href="#s-creators"/><use class="d1" href="#s-creators"/><use class="f" href="#s-creators"/></svg></article>
+    </div>
+  </section>
 
-<section class="section ecosystem reveal scroll-section" id="surfaces" data-next="The Rights Object">
-  <div class="section-label">04 / BUILT FOR THE SURFACES</div>
-  <div class="surface-row"><div><b>WALLETS</b><span>READ</span></div><div><b>MARKETS</b><span>SURFACE</span></div><div><b>APPS</b><span>QUERY</span></div><div><b>CREATORS</b><span>PROVIDE</span></div></div>
-</section>
-
-<section class="final scroll-section" data-next="End"><div class="final-orb"></div><div class="section-label">TOG</div><h2>Put the rights<br><em>beside the asset.</em></h2><p>One profile that wallets, markets and applications can read without rebuilding the rights context from scratch.</p><div class="hero-actions"><a class="button primary large" href="rights.html">Explore the Rights Object <span>↗</span></a><a class="button large" href="assets/TOG_Product_Spec.pdf" download="TOG_Product_Spec.pdf">Download the specification <span>↓</span></a></div></section>
+  <!-- 7 / FINAL -->
+  <section class="final" id="start" data-pose="final">
+    <div class="final-copy">
+      <h2>Put the rights<br>beside the asset.</h2>
+      <p>One profile that wallets, markets and applications can read without rebuilding the rights context from scratch.</p>
+      <div class="hero-actions"><a class="button primary large" href="rights.html">Explore the Rights Object</a><a class="button large" href="assets/TOG_Product_Spec.pdf" download="TOG_Product_Spec.pdf">Download the specification</a></div>
+    </div>
+  </section>
 </main>
+
 <section class="x-brand-banner" aria-label="TOG banner">
   <a href="#" class="x-brand-banner-link" aria-label="TOG on X">
     <img src="assets/tog-x-banner.png" alt="TOG — Rights that travel with every asset." loading="lazy" decoding="async">
@@ -116,9 +181,15 @@
 
 <footer>
   <div class="footer-brand"><img src="assets/tog-logo-nav.png" alt="TOG"><span>TOG</span><p>Portable Digital Rights Layer</p></div>
-  <div class="footer-community"><span>COMMUNITY</span><a href="https://x.com/tog_protocol" target="_blank" rel="noopener noreferrer" aria-label="TOG on X"><img src="assets/x.svg" alt=""></a></div>
-  <div class="footer-cols"><div><b>PRODUCT</b><a href="system.html">System</a><a href="rights.html">Rights Object</a><a href="verify.html">Verification</a><a href="portability.html">Portability</a></div><div><b>BUILD</b><a href="developers.html">Developers</a><a href="docs.html">Documentation</a><a href="vision.html">Vision</a></div><div><b>TOG</b><a href="index.html">Home</a><a href="vision.html">About</a><a href="assets/TOG_Product_Spec.pdf" download="TOG_Product_Spec.pdf">Specification PDF</a></div></div>
-  <div class="footer-bottom"><span>TOG</span><span>Portable rights infrastructure</span><span>06 RIGHTS / 03 SOURCES / 01 OBJECT</span></div>
+  <div class="footer-community"><span>Community</span><a href="https://x.com/tog_protocol" target="_blank" rel="noopener noreferrer" aria-label="TOG on X"><img src="assets/x.svg" alt=""></a></div>
+  <div class="footer-cols">
+    <div><b>Product</b><a href="system.html">System</a><a href="rights.html">Rights Object</a><a href="verify.html">Verification</a><a href="portability.html">Portability</a></div>
+    <div><b>Build</b><a href="developers.html">Developers</a><a href="docs.html">Documentation</a><a href="vision.html">Vision</a></div>
+    <div><b>TOG</b><a href="index.html">Home</a><a href="vision.html">About</a><a href="assets/TOG_Product_Spec.pdf" download="TOG_Product_Spec.pdf">Specification PDF</a></div>
+  </div>
+  <div class="footer-bottom"><span>TOG</span><span>Portable rights infrastructure</span><span>6 rights, 3 sources, 1 object</span></div>
 </footer>
-<script src="script.js"></script>
-</body></html>
+
+<script src="home.js"></script>
+</body>
+</html>
